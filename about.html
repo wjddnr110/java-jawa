@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Java & Jawa</title>
+    <meta name="description" content="Learn about Java & Jawa — two sister factories in East Java, Indonesia crafting world-class wood furniture since [year].">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ======================================================
+         NAVBAR
+    ======================================================= -->
+    <header class="navbar" id="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">Java & Jawa</a>
+        </div>
+        <nav class="nav-center">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contacts.html">Contact</a></li>
+            </ul>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <!-- Mobile nav -->
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <!-- <ul class="sub-links">
+                <li><a href="dining.html">Dining</a></li>
+                <li><a href="bar-game.html">Bar & Game</a></li>
+                <li><a href="entertainment.html">Entertainment</a></li>
+                <li><a href="occasional.html">Occasional</a></li>
+                <li><a href="accents.html">Accents</a></li>
+                <li><a href="home-office.html">Home Office</a></li>
+                <li><a href="bedroom.html">Bedroom</a></li>
+            </ul> -->
+
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- ======================================================
+         PAGE HEADER
+    ======================================================= -->
+    <div class="page-header" style="padding-top: calc(var(--nav-h) + 60px); padding-bottom: 90px;">
+        <span class="eyebrow" style="color:var(--color-accent-lt);">Who We Are</span>
+        <h1 style="color:#fff; margin-top:0.5rem;">Rooted in Java.<br>Built for the World.</h1>
+        <p>Two factories. One vision. Handcrafted solid wood furniture connecting the artisans of East Java to markets worldwide.</p>
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <span>About</span>
+        </nav>
+    </div>
+
+    <!-- ======================================================
+         INTRO STORY — full-width image + pull quote
+    ======================================================= -->
+    <section style="display:grid; grid-template-columns:1fr 1fr; min-height:520px;">
+        <div style="background: var(--color-warm) url('about.jpg')  center/cover no-repeat; min-height:420px;"></div>
+        <div style="background:var(--color-bg); padding:80px 7%; display:flex; flex-direction:column; justify-content:center;">
+            <span class="eyebrow">Our Heritage</span>
+            <h2 style="margin-bottom:1.2rem;">From the Heart of East Java</h2>
+            <p style="margin-bottom:1.2rem;">
+                Java & Jawa was born from a simple belief: that world-class furniture
+                shouldn't require a world-class price. The forests and craftspeople of
+                East Java have produced exceptional wood work for generations — we simply
+                connect that skill to the global marketplace.
+            </p>
+            <p>
+                Our two factories — PT. Java Furniture in Mojokerto and PT. Jawa Lily
+                Furniture in Probolinggo — operate under a unified quality standard while
+                each retaining the local knowledge and techniques that make Javanese
+                craftsmanship unique.
+            </p>
+            <div class="divider"></div>
+            <a href="contacts.html" class="btn btn-outline" style="width:fit-content;">Get in Touch</a>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         STATS ROW
+    ======================================================= -->
+    <div class="stats-bar">
+        <div class="stat-item fade-up">
+            <span class="stat-number">30+</span>
+            <span class="stat-label">Years of Experience</span>
+        </div>
+        <div class="stat-item fade-up">
+            <span class="stat-number">2</span>
+            <span class="stat-label">Factories</span>
+        </div>
+        <div class="stat-item fade-up">
+            <span class="stat-number">1000+</span>
+            <span class="stat-label">Skilled Artisans</span>
+        </div>
+    </div>
+
+    <!-- ======================================================
+         OUR STORY — long form
+    ======================================================= -->
+    <section class="about-story" style="padding-top:100px; padding-bottom:60px;">
+        <div class="about-story-text fade-up">
+            <span class="eyebrow">Our Story</span>
+            <h2 style="margin-bottom:1.4rem;">How It All Started</h2>
+            <p>
+                [Replace with your founding story — when was the company established,
+                who founded it, what was the original vision? Share the personal
+                history that makes Java & Jawa unique.]
+            </p>
+            <p>
+                [Continue the story — key milestones, growth of the factories,
+                expansion into the US market. This section should feel warm and
+                personal, not like a corporate brochure.]
+            </p>
+            <p>
+                [Close with where the company is today — the relationship between
+                the two factories, the LA operations, and what drives the team forward.]
+            </p>
+            <div class="divider"></div>
+        </div>
+        <div class="about-story-image fade-up">
+            <img src="about-story.jpg" alt="Java & Jawa craftsmen at work">
+        </div>
+    </section>
+
+    <!-- ======================================================
+         TWO FACTORIES
+    ======================================================= -->
+    <section style="padding: 60px 5% 100px; max-width: var(--max-w); margin: 0 auto;">
+        <div class="section-title text-center fade-up" style="max-width:100%; text-align:center; margin-bottom:56px;">
+            <span class="eyebrow">Our Facilities</span>
+            <h2>Two Factories, One Standard</h2>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+
+            <!-- Factory 1 -->
+            <div style="border:1px solid var(--color-border); overflow:hidden;" class="fade-up">
+                <div style="height:400px; background: var(--color-warm);">
+                    <img src="java.PNG" alt="PT. Java Furniture factory">
+                </div>
+                <div style="padding:36px;">
+                    <span class="eyebrow">Factory 01</span>
+                    <h3 style="margin-bottom:10px; font-size:1.3rem;">PT. Java Furniture</h3>
+                    <p style="margin-bottom:16px;">
+                        Located in Mojokerto Regency, this is our flagship production
+                        facility — specialising in dining, bedroom, and home office collections.
+                    </p>
+                    <address style="font-style:normal; font-size:0.85rem; color:var(--color-muted); line-height:1.8;">
+                        Glatik, Watesnegoro, Ngoro,<br>
+                        Mojokerto Regency, East Java 61385
+                    </address>
+                </div>
+            </div>
+
+            <!-- Factory 2 -->
+            <div style="border:1px solid var(--color-border); overflow:hidden;" class="fade-up">
+                <div style="height:400px; background: var(--color-warm);">
+                    <img src="jawa.PNG" alt="PT. Jawa Lily Furniture factory">
+                </div>
+                <div style="padding:36px;">
+                    <span class="eyebrow">Factory 02</span>
+                    <h3 style="margin-bottom:10px; font-size:1.3rem;">PT. Jawa Lily Furniture</h3>
+                    <p style="margin-bottom:16px;">
+                        Located in Probolinggo, our second factory focuses on accent pieces,
+                        entertainment units, and custom finishing work.
+                    </p>
+                    <address style="font-style:normal; font-size:0.85rem; color:var(--color-muted); line-height:1.8;">
+                        55C2+23F, Sak Sak, Sepuhgembol,<br>
+                        Kec. Wonomerto, Probolinggo,<br>
+                        East Java 67253
+                    </address>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         VALUES
+    ======================================================= -->
+    <section class="values-section">
+        <div class="values-inner">
+            <div class="section-title text-center fade-up" style="max-width:100%; text-align:center;">
+                <span class="eyebrow">What Drives Us</span>
+                <h2>Our Values</h2>
+            </div>
+            <div class="values-grid">
+
+                <div class="value-item fade-up">
+                    <div class="value-icon">
+                        <!-- Tree / Sustainability icon -->
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C8 2 5 5.5 5 9c0 3 2 5.5 5 6.5V20h4v-4.5c3-1 5-3.5 5-6.5 0-3.5-3-7-7-7z"/>
+                        </svg>
+                    </div>
+                    <h3>Sustainable Sourcing</h3>
+                    <p>We work exclusively with legally sourced timber and actively replant through partnerships with local forestry cooperatives.</p>
+                </div>
+
+                <div class="value-item fade-up">
+                    <div class="value-icon">
+                        <!-- Handcraft icon -->
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 11l-1-1-4 4 1 1 4-4zm6-6l-1-1-8 8 1 1 8-8zm-2 10l-1-1-4 4 1 1 4-4z"/>
+                        </svg>
+                    </div>
+                    <h3>Handcraft First</h3>
+                    <p>Every mortise, tenon, and finish is executed by hand. We invest in our craftspeople — not in shortcuts.</p>
+                </div>
+
+                <div class="value-item fade-up">
+                    <div class="value-icon">
+                        <!-- Quality check icon -->
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </div>
+                    <h3>Uncompromising Quality</h3>
+                    <p>Each piece undergoes a multi-point inspection before leaving the factory. If it doesn't meet our standard, it doesn't ship.</p>
+                </div>
+
+                <div class="value-item fade-up">
+                    <div class="value-icon">
+                        <!-- Globe / Export icon -->
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
+                    <h3>Global Reach</h3>
+                    <p>With a dedicated warehouse and sales office in Los Angeles, we make ordering from Indonesia as seamless as ordering locally.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         PROCESS — HOW WE WORK
+    ======================================================= -->
+    <section style="padding: var(--section-pad); max-width: var(--max-w); margin: 0 auto;">
+        <div class="section-title fade-up">
+            <span class="eyebrow">How We Work</span>
+            <h2>From Forest to Your Floor</h2>
+            <p>Our process is designed for quality at every step — from raw material selection to final delivery.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:2px; margin-top:48px;">
+
+            <div class="process-step fade-up" style="padding:36px 28px; background:var(--color-warm); border:1px solid var(--color-border);">
+                <div style="font-family:var(--font-display); font-size:2.4rem; color:var(--color-accent); margin-bottom:12px;">01</div>
+                <h3 style="margin-bottom:8px;">Material Selection</h3>
+                <p style="font-size:0.88rem;">Timber is hand-selected for grain, density, and moisture content before entering the factory.</p>
+            </div>
+
+            <div class="process-step fade-up" style="padding:36px 28px; background:var(--color-warm); border:1px solid var(--color-border);">
+                <div style="font-family:var(--font-display); font-size:2.4rem; color:var(--color-accent); margin-bottom:12px;">02</div>
+                <h3 style="margin-bottom:8px;">Milling & Drying</h3>
+                <p style="font-size:0.88rem;">Kiln-dried to the correct moisture level to prevent warping during international shipping.</p>
+            </div>
+
+            <div class="process-step fade-up" style="padding:36px 28px; background:var(--color-warm); border:1px solid var(--color-border);">
+                <div style="font-family:var(--font-display); font-size:2.4rem; color:var(--color-accent); margin-bottom:12px;">03</div>
+                <h3 style="margin-bottom:8px;">Joinery & Assembly</h3>
+                <p style="font-size:0.88rem;">Traditional mortise-and-tenon and dovetail joints — no staples, no shortcuts.</p>
+            </div>
+
+            <div class="process-step fade-up" style="padding:36px 28px; background:var(--color-warm); border:1px solid var(--color-border);">
+                <div style="font-family:var(--font-display); font-size:2.4rem; color:var(--color-accent); margin-bottom:12px;">04</div>
+                <h3 style="margin-bottom:8px;">Hand Finishing</h3>
+                <p style="font-size:0.88rem;">Stains, lacquers, and wax applied by hand in our dedicated finishing room. 50+ options available.</p>
+            </div>
+
+            <div class="process-step fade-up" style="padding:36px 28px; background:var(--color-warm); border:1px solid var(--color-border);">
+                <div style="font-family:var(--font-display); font-size:2.4rem; color:var(--color-accent); margin-bottom:12px;">05</div>
+                <h3 style="margin-bottom:8px;">Quality Control</h3>
+                <p style="font-size:0.88rem;">Multi-point inspection before packing. Any piece that doesn't pass is reworked or rejected.</p>
+            </div>
+
+            <div class="process-step fade-up" style="padding:36px 28px; background:var(--color-dark);">
+                <div style="font-family:var(--font-display); font-size:2.4rem; color:var(--color-accent-lt); margin-bottom:12px;">06</div>
+                <h3 style="margin-bottom:8px; color:#fff;">Delivery</h3>
+                <p style="font-size:0.88rem; color:rgba(255,255,255,0.55);">Shipped container or via our LA warehouse — we handle logistics so you don't have to.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         TEAM
+    ======================================================= -->
+    <!-- <section class="team-section">
+        <div class="section-title fade-up">
+            <span class="eyebrow">The People Behind It</span>
+            <h2>Meet the Team</h2>
+            <p>From the factory floor in Java to the showroom floor in Los Angeles.</p>
+        </div>
+        <div class="team-grid">
+            <div class="fade-up">
+                <div class="team-photo"><img src="team-1.jpg" alt="Team member"></div>
+                <p class="team-name">[Name]</p>
+                <p class="team-role">Founder & Managing Director</p>
+            </div>
+            <div class="fade-up">
+                <div class="team-photo"><img src="team-2.jpg" alt="Team member"></div>
+                <p class="team-name">[Name]</p>
+                <p class="team-role">Head of Production — PT. Java Furniture</p>
+            </div>
+            <div class="fade-up">
+                <div class="team-photo"><img src="team-3.jpg" alt="Team member"></div>
+                <p class="team-name">[Name]</p>
+                <p class="team-role">Head of Production — PT. Jawa Lily</p>
+            </div>
+            <div class="fade-up">
+                <div class="team-photo"><img src="team-4.jpg" alt="Team member"></div>
+                <p class="team-name">[Name]</p>
+                <p class="team-role">US Sales Director — Los Angeles</p>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- ======================================================
+         CTA
+    ======================================================= -->
+    <section style="background:var(--color-accent); padding:80px 5%; text-align:center;">
+        <span class="eyebrow" style="color:rgba(255,255,255,0.7);">Work With Us</span>
+        <h2 style="color:#fff; max-width:520px; margin:0 auto 1rem;">Interested in carrying Java & Jawa in your store?</h2>
+        <p style="color:rgba(255,255,255,0.75); max-width:400px; margin:0 auto 2rem;">
+            Reach out to our US sales team to request a catalog, samples, or pricing.
+        </p>
+        <a href="contacts.html" class="btn" style="background:#fff; border-color:#fff; color:var(--color-accent);">Get in Touch</a>
+    </section>
+
+    <!-- ======================================================
+         FOOTER
+    ======================================================= -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>Manufacturing Locations</h4>
+                <address>
+                    <strong style="color:rgba(255,255,255,0.65);font-style:normal;">PT. Java Furniture</strong><br>
+                    Glatik, Watesnegoro, Ngoro,<br>
+                    Mojokerto Regency, East Java 61385
+                </address>
+                <br>
+                <address>
+                    <strong style="color:rgba(255,255,255,0.65);font-style:normal;">PT. Jawa Lily Furniture</strong><br>
+                    55C2+23F, Sak Sak, Sepuhgembol,<br>
+                    Kec. Wonomerto, Probolinggo, East Java 67253
+                </address>
+                <a href="#" class="map-link">View on Google Maps</a>
+            </div>
+            <div class="footer-col">
+                <h4>US Operations</h4>
+                <address>
+                    <strong style="color:rgba(255,255,255,0.65);font-style:normal;">LA Office & Warehouse</strong><br>
+                    [Address Line 1]<br>
+                    Los Angeles, CA [Zip Code]
+                </address>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <a href="#">WhatsApp</a>
+                <a href="mailto:contact@javajawa.com">Email Us</a>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+            </div>
+            <div class="footer-col">
+                <h4>Stay Updated</h4>
+                <p>Subscribe for new catalogs and show announcements.</p>
+                <form action="#" class="newsletter-form" style="margin-top:16px;">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom" style="max-width:var(--max-w);margin:0 auto;">
+            <p>&copy; 2026 Java & Jawa. All rights reserved.</p>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar    = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        hamburger.addEventListener('click', () => {
+            const isOpen = mobileNav.classList.toggle('open');
+            hamburger.setAttribute('aria-expanded', isOpen);
+            mobileNav.setAttribute('aria-hidden', !isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+
+        const fadeEls = document.querySelectorAll('.fade-up');
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        fadeEls.forEach(el => io.observe(el));
+    </script>
+</body>
+</html>

@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Detail | Java & Jawa</title>
+<meta name="description" content="Product detail — Java & Jawa furniture collections.">
+<link rel="stylesheet" href="style.css">
+
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS
+   Palette: warm paper / deep ink / antique brass /
+            mahogany warm-mid / hairline border
+═══════════════════════════════════════════════════ */
+:root {
+  --paper:    #F5F2EC;
+  --ink:      #1A1916;
+  --warm-mid: #7B6A58;
+  --brass:    #C4A97D;
+  --border:   #E2DDD4;
+  --white:    #FDFCF9;
+  --dim:      #A89880;
+
+  --f-d: 'Cormorant Garamond', Georgia, serif;
+  --f-b: 'DM Sans', system-ui, sans-serif;
+
+  --nav-h: 60px;
+  --ease:  cubic-bezier(.22,1,.36,1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--f-b);
+  font-weight: 300;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; }
+
+/* ── NAV ── */
+.navbar {
+  position: fixed; inset: 0 0 auto;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  background: rgba(253,252,249,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 300;
+  transition: box-shadow .3s;
+}
+.navbar.scrolled { box-shadow: 0 1px 24px rgba(26,25,22,.07); }
+.logo {
+  font-family: var(--f-d);
+  font-size: 1.15rem; font-weight: 500; letter-spacing: .06em;
+  color: var(--ink); text-decoration: none;
+}
+.logo em { font-style: italic; color: var(--brass); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--warm-mid); text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+.hamburger { display: none; }
+.mobile-nav { display: none; }
+
+/* ═══════════════════════════════════════════════════
+   PDP: full-width 2-col, gallery sticky left
+═══════════════════════════════════════════════════ */
+.pdp {
+  display: grid;
+  grid-template-columns: 58% 42%;
+  margin-top: var(--nav-h);
+  min-height: calc(100vh - var(--nav-h));
+  align-items: start;
+}
+
+/* ─── LEFT GALLERY ─── */
+.pdp-gallery {
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  display: grid;
+  grid-template-rows: 1fr 78px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* SIGNATURE: vertical catalogue label on left edge */
+.g-label {
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%) rotate(-90deg) translateX(-50%);
+  transform-origin: left center;
+  display: flex; align-items: center; gap: 9px;
+  white-space: nowrap; pointer-events: none; z-index: 4;
+}
+.g-label-text {
+  font-size: .55rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--dim);
+}
+.g-label-rule { width: 28px; height: 1px; background: var(--border); }
+
+/* main stage */
+.g-stage {
+  position: relative; overflow: hidden; background: #ECEAE3;
+}
+.g-main {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 28px 44px 28px 60px;
+  transition: opacity .3s var(--ease), transform .45s var(--ease);
+}
+.g-main.fading { opacity: 0; transform: scale(1.025); }
+
+/* arrows */
+.g-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(253,252,249,.88); border: 1px solid var(--border);
+  cursor: pointer; opacity: 0;
+  transition: opacity .2s, background .2s;
+  z-index: 5;
+}
+.g-stage:hover .g-arrow { opacity: 1; }
+.g-arrow:hover { background: var(--white); }
+.g-arrow svg { width: 14px; height: 14px; fill: none; stroke: var(--ink); stroke-width: 2; }
+.g-arrow.prev { left: 12px; }
+.g-arrow.next { right: 12px; }
+
+/* counter */
+.g-counter {
+  position: absolute; bottom: 12px; right: 14px;
+  font-size: .58rem; letter-spacing: .1em; color: var(--warm-mid);
+  background: rgba(253,252,249,.78); padding: 2px 8px;
+  backdrop-filter: blur(4px); z-index: 5;
+}
+
+/* thumbnail strip */
+.g-thumbs {
+  display: flex; border-top: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+.g-thumbs::-webkit-scrollbar { display: none; }
+.g-thumb {
+  flex: 0 0 78px; height: 78px;
+  position: relative; cursor: pointer; overflow: hidden;
+  border-right: 1px solid var(--border); background: #ECEAE3;
+  opacity: .5; transition: opacity .2s;
+}
+.g-thumb::after {
+  content: ''; position: absolute; inset: 0;
+  border-bottom: 2px solid transparent; transition: border-color .2s;
+}
+.g-thumb.active { opacity: 1; }
+.g-thumb.active::after { border-color: var(--ink); }
+.g-thumb:not(.active):hover { opacity: .85; }
+.g-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ─── RIGHT: INFO PANEL ─── */
+.pdp-info {
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  min-height: calc(100vh - var(--nav-h));
+}
+
+/* breadcrumb */
+.pd-crumb {
+  display: flex; align-items: center; gap: 7px;
+  padding: 18px 44px;
+  border-bottom: 1px solid var(--border);
+  font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--warm-mid);
+}
+.pd-crumb a { text-decoration: none; color: var(--warm-mid); transition: color .2s; }
+.pd-crumb a:hover { color: var(--brass); }
+.pd-crumb-sep { color: var(--dim); }
+.pd-crumb-cur { color: var(--ink); }
+
+/* share */
+.pd-share {
+  display: flex; align-items: center; gap: 9px;
+  padding: 13px 44px;
+  border-bottom: 1px solid var(--border);
+}
+.share-lbl {
+  font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--dim); margin-right: 4px;
+}
+.share-a {
+  width: 29px; height: 29px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); background: none;
+  color: var(--warm-mid); text-decoration: none;
+  transition: border-color .2s, color .2s;
+}
+.share-a:hover { border-color: var(--ink); color: var(--ink); }
+.share-a svg { width: 11px; height: 11px; fill: currentColor; }
+
+/* scrollable body */
+.pd-body {
+  flex: 1; overflow-y: auto;
+  padding: 30px 44px 110px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.pd-body::-webkit-scrollbar { width: 3px; }
+.pd-body::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* typography hierarchy */
+.pd-collection {
+  font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--brass); margin-bottom: 7px;
+}
+.pd-h1 {
+  font-family: var(--f-d);
+  font-size: clamp(1.9rem, 2.8vw, 2.8rem);
+  font-weight: 400; line-height: 1.05; color: var(--ink);
+  margin-bottom: 5px;
+}
+.pd-subtype {
+  font-size: .8rem; letter-spacing: .05em; color: var(--warm-mid);
+  margin-bottom: 26px;
+}
+
+/* description */
+.pd-desc {
+  font-size: .87rem; line-height: 1.84; color: #57504A;
+}
+.pd-desc.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pd-see-more {
+  background: none; border: none; cursor: pointer; padding: 0;
+  font-family: var(--f-b); font-size: .73rem; letter-spacing: .07em;
+  color: var(--brass); text-decoration: underline; text-underline-offset: 3px;
+  margin-top: 5px; display: block; transition: color .2s;
+}
+.pd-see-more:hover { color: var(--ink); }
+
+/* divider */
+.pd-hr { height: 1px; background: var(--border); margin: 24px 0; }
+
+/* section label */
+.pd-sh {
+  font-size: .58rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 13px;
+}
+
+/* finish selector */
+.fin-row {
+  display: flex; align-items: center; gap: 9px; margin-bottom: 13px;
+}
+.fin-dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.08); flex-shrink: 0;
+  transition: background .25s;
+}
+.fin-label { font-size: .8rem; color: var(--ink); font-weight: 400; }
+
+.fin-swatches { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fin-sw {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid transparent;
+  outline: 2px solid transparent; outline-offset: 2px;
+  cursor: pointer; position: relative;
+  transition: outline-color .15s, transform .15s;
+}
+.fin-sw:hover { transform: scale(1.22); }
+.fin-sw.active { outline-color: var(--ink); }
+/* tooltip */
+.fin-sw::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: #fff;
+  font-family: var(--f-b); font-size: .56rem; white-space: nowrap;
+  padding: 3px 7px; pointer-events: none; opacity: 0;
+  transition: opacity .15s; z-index: 20;
+}
+.fin-sw:hover::after { opacity: 1; }
+.fin-extra { font-size: .6rem; color: var(--dim); align-self: center; }
+
+/* piece table */
+.piece-list { display: flex; flex-direction: column; gap: 2px; }
+.piece-row {
+  display: grid; grid-template-columns: 60px 1fr auto;
+  gap: 13px; align-items: center;
+  padding: 11px 13px;
+  background: var(--white); border: 1px solid var(--border);
+  transition: border-color .2s, background .2s;
+}
+.piece-row:hover { border-color: var(--dim); background: #F8F6F2; }
+.piece-img {
+  width: 60px; height: 46px; object-fit: cover;
+  background: #E6E2DA;
+}
+.piece-sku {
+  font-family: var(--f-d); font-size: .95rem; font-weight: 500;
+  color: var(--ink); margin-bottom: 2px;
+}
+.piece-lbl { font-size: .68rem; color: var(--warm-mid); line-height: 1.45; margin-bottom: 2px; }
+.piece-dim { font-size: .62rem; color: var(--dim); letter-spacing: .04em; }
+.piece-wt  { font-size: .6rem; color: var(--border); white-space: nowrap; text-align: right; }
+
+/* features */
+.feat-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.feat-list li {
+  display: flex; gap: 9px; align-items: flex-start;
+  font-size: .82rem; line-height: 1.65; color: #57504A;
+}
+.feat-list li::before {
+  content: ''; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--brass); flex-shrink: 0; margin-top: 7px;
+}
+
+/* CTAs */
+.cta-stack { display: flex; flex-direction: column; gap: 7px; margin-top: 6px; }
+.btn-p {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px;
+  background: var(--ink); color: var(--white);
+  font-family: var(--f-b); font-size: .66rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  border: none; cursor: pointer; text-decoration: none;
+  transition: background .3s;
+}
+.btn-p:hover { background: #2C2A25; }
+.btn-p svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.btn-o {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 12px;
+  background: transparent; color: var(--ink);
+  font-family: var(--f-b); font-size: .66rem; font-weight: 300;
+  letter-spacing: .16em; text-transform: uppercase;
+  border: 1px solid var(--ink); cursor: pointer; text-decoration: none;
+  transition: background .3s, color .3s;
+}
+.btn-o:hover { background: var(--ink); color: var(--white); }
+
+/* service trio */
+.svc-trio {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--border); margin-top: 36px;
+}
+.svc {
+  background: var(--paper); padding: 22px 16px 18px; text-align: center;
+}
+.svc-icon { width: 26px; height: 26px; margin: 0 auto 11px; color: var(--brass); }
+.svc-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.4; }
+.svc-title {
+  font-family: var(--f-d); font-size: .92rem; font-weight: 500;
+  color: var(--ink); margin-bottom: 6px; line-height: 1.3;
+}
+.svc-txt { font-size: .68rem; line-height: 1.65; color: var(--warm-mid); margin-bottom: 11px; }
+.svc-lnk {
+  font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--brass); text-decoration: none;
+  border-bottom: 1px solid rgba(196,169,125,.3); padding-bottom: 1px;
+  transition: border-color .2s;
+}
+.svc-lnk:hover { border-color: var(--brass); }
+
+/* ═══════════════════════════════════════════════════
+   SUGGESTIONS
+═══════════════════════════════════════════════════ */
+.sug-wrap {
+  border-top: 1px solid var(--border);
+  padding: 56px 40px 80px;
+  background: var(--white);
+}
+.sug-hd {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 32px;
+}
+.sug-title {
+  font-family: var(--f-d); font-size: 1.75rem; font-weight: 400; color: var(--ink);
+}
+.sug-title em { font-style: italic; color: var(--brass); }
+.sug-all {
+  font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--warm-mid); text-decoration: none;
+  display: flex; align-items: center; gap: 5px; transition: color .2s;
+}
+.sug-all:hover { color: var(--ink); }
+.sug-all svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+.sug-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 2px;
+}
+.sug-card {
+  text-decoration: none; color: inherit; display: block;
+  background: var(--paper); cursor: pointer;
+}
+.sug-img-wrap {
+  position: relative; aspect-ratio: 4/3;
+  overflow: hidden; background: #ECEAE3;
+}
+.sug-img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform .55s var(--ease), opacity .4s ease;
+}
+.sug-img.mood { opacity: 0; }
+.sug-card:hover .sug-img.primary { transform: scale(1.04); opacity: 0; }
+.sug-card:hover .sug-img.mood    { opacity: 1; transform: scale(1.04); }
+.sug-body {
+  padding: 12px 13px 15px;
+  border: 1px solid var(--border); border-top: none;
+}
+.sug-cat {
+  font-size: .56rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--brass); margin-bottom: 4px;
+}
+.sug-name {
+  font-family: var(--f-d); font-size: 1.05rem; font-weight: 400;
+  color: var(--ink); margin-bottom: 2px; line-height: 1.2;
+}
+.sug-sub { font-size: .68rem; color: var(--warm-mid); margin-bottom: 7px; }
+.sug-dots { display: flex; gap: 4px; align-items: center; }
+.sug-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1.5px solid transparent;
+}
+.sug-dot.active { border-color: var(--ink); }
+.sug-more { font-size: .56rem; color: var(--dim); }
+
+/* ═══════════════════════════════════════════════════
+   STICKY BOTTOM BAR
+═══════════════════════════════════════════════════ */
+.sb {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(26,25,22,.97);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,.05);
+  display: flex; align-items: center;
+  padding: 0 40px; gap: 16px;
+  z-index: 200;
+  transform: translateY(100%);
+  transition: transform .4s var(--ease);
+}
+.sb.vis { transform: translateY(0); }
+.sb-thumb {
+  width: 40px; height: 32px; object-fit: cover; flex-shrink: 0;
+  background: rgba(255,255,255,.08);
+}
+.sb-info { flex: 1; }
+.sb-name {
+  font-family: var(--f-d); font-size: .9rem; color: rgba(253,252,249,.88); line-height: 1.2;
+}
+.sb-sub { font-size: .6rem; color: rgba(253,252,249,.38); letter-spacing: .06em; }
+.sb-cta {
+  padding: 8px 24px;
+  background: var(--brass); color: #fff;
+  font-family: var(--f-b); font-size: .62rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase;
+  border: none; cursor: pointer; white-space: nowrap;
+  text-decoration: none; display: flex; align-items: center;
+  transition: background .2s;
+}
+.sb-cta:hover { background: #B8975E; }
+
+/* ═══════════════════════════════════════════════════
+   FOOTER (inherits from style.css, minor overrides)
+═══════════════════════════════════════════════════ */
+.footer { background: var(--ink); color: rgba(245,242,236,.55); font-family: var(--f-b); }
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 44px; max-width: 1440px; margin: 0 auto;
+  padding: 52px 40px 44px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.f-brand {
+  font-family: var(--f-d); font-size: 1.3rem; font-weight: 400;
+  color: rgba(245,242,236,.88); letter-spacing: .06em; margin-bottom: 12px;
+}
+.f-brand em { font-style: italic; color: var(--brass); }
+.f-tag { font-size: .76rem; line-height: 1.7; max-width: 250px; }
+.f-head {
+  font-size: .56rem; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(245,242,236,.3); margin-bottom: 16px;
+}
+.f-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.f-links a {
+  font-size: .76rem; color: rgba(245,242,236,.52);
+  text-decoration: none; transition: color .2s;
+}
+.f-links a:hover { color: rgba(245,242,236,.88); }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1440px; margin: 0 auto;
+  padding: 18px 40px; font-size: .68rem;
+}
+.f-legal { display: flex; gap: 18px; }
+.f-legal a { color: rgba(245,242,236,.3); text-decoration: none; }
+.f-legal a:hover { color: rgba(245,242,236,.65); }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .pdp { grid-template-columns: 1fr; }
+  .pdp-gallery { position: static; height: 58vw; grid-template-rows: 1fr 64px; }
+  .pd-crumb, .pd-share, .pd-body { padding-left: 28px; padding-right: 28px; }
+  .sug-grid { grid-template-columns: repeat(2,1fr); }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 640px) {
+  .navbar { padding: 0 20px; }
+  .nav-links { display: none; }
+  .pdp-gallery { height: 66vw; }
+  .pd-crumb, .pd-share, .pd-body { padding-left: 18px; padding-right: 18px; }
+  .pd-h1 { font-size: 1.75rem; }
+  .svc-trio { grid-template-columns: 1fr; }
+  .sug-grid { grid-template-columns: repeat(2,1fr); }
+  .sug-wrap { padding: 36px 18px 60px; }
+  .footer-top { grid-template-columns: 1fr; padding: 36px 18px; }
+  .footer-bottom { padding: 16px 18px; flex-direction: column; gap: 8px; }
+  .sb { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================================================
+         NAVBAR
+    ======================================================= -->
+    <header class="navbar" id="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">Java & Jawa</a>
+        </div>
+        <nav class="nav-center">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contacts.html">Contact</a></li>
+            </ul>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <!-- Mobile nav -->
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <!-- <ul class="sub-links">
+                <li><a href="dining.html">Dining</a></li>
+                <li><a href="bar-game.html">Bar & Game</a></li>
+                <li><a href="entertainment.html">Entertainment</a></li>
+                <li><a href="occasional.html">Occasional</a></li>
+                <li><a href="accents.html">Accents</a></li>
+                <li><a href="home-office.html">Home Office</a></li>
+                <li><a href="bedroom.html">Bedroom</a></li>
+            </ul> -->
+
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+        </ul>
+    </nav>
+
+<!-- PDP -->
+<div class="pdp" id="pdp"></div> 
+
+<!-- SUGGESTIONS -->
+<section class="sug-wrap" id="sugWrap" style="display:none">
+  <div class="sug-hd">
+    <h2 class="sug-title">You may also <em>like</em></h2>
+    <a href="products.html" class="sug-all" id="sugAll">
+      View all
+      <svg viewBox="0 0 24 24"><path d="m5 12 14 0M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="sug-grid" id="sugGrid"></div>
+</section>
+
+<!-- STICKY BAR -->
+<div class="sb" id="stickyBar">
+  <img class="sb-thumb" id="sbThumb" src="" alt="">
+  <div class="sb-info">
+    <div class="sb-name" id="sbName"></div>
+    <div class="sb-sub"  id="sbSub"></div>
+  </div>
+  <a href="contacts.html" class="sb-cta" id="sbCta">Request a Quote</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div>
+      <div class="f-brand">Java <em>&</em> Jawa</div>
+      <p class="f-tag">Premium furniture crafted in East Java — built for the North American market. Authentic materials, enduring quality.</p>
+    </div>
+    <div>
+      <div class="f-head">Products</div>
+      <ul class="f-links">
+        <li><a href="products.html?cat=dining">Dining</a></li>
+        <li><a href="products.html?cat=bar-game">Bar & Game</a></li>
+        <li><a href="products.html?cat=entertainment">Entertainment</a></li>
+        <li><a href="products.html?cat=occasional">Occasional</a></li>
+        <li><a href="products.html?cat=accents">Accents</a></li>
+        <li><a href="products.html?cat=bedroom">Bedroom</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-head">Company</div>
+      <ul class="f-links">
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="contacts.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-head">Connect</div>
+      <ul class="f-links">
+        <li><a href="mailto:wjddnr1110@gmail.com">Email Us</a></li>
+        <li><a href="https://wa.me/6282229206931" target="_blank">WhatsApp</a></li>
+        <li><a href="https://instagram.com/pt_jawalilyfurniture" target="_blank">Instagram</a></li>
+        <li><a href="contacts.html">Request Catalog</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Java & Jawa. All rights reserved.</span>
+    <div class="f-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ─── CONSTANTS ─────────────────────────────────── */
+const SD = 'https://www.sunnydesigns.com/images/';
+const IM = 'https://www.sunnydesigns.com/img/';
+
+const FC = {
+  AG:'#8a9090',AB:'#7a5030',AC2:'#3a3530',BN:'#2a2620',BS:'#2e2a25',
+  BW:'#1e1a16',BP:'#c0b098',BU:'#b8885a',CB:'#4a3828',CD:'#a09080',
+  CN:'#c87040',CO:'#2a2218',DC2:'#3a2418',DR:'#c8b890',DL:'#a06830',
+  EC:'#c8b8a0',ED:'#908070',GW:'#787870',KW:'#8a6040',LB:'#7898b8',
+  LW:'#d4c4a0',MB:'#d8c8a8',MG:'#909090',MW:'#e8e0d8',NW:'#906a38',
+  OB:'#6080a0',OG:'#c0a870',RA:'#906448',RN:'#7a4838',RO2:'#a07858',
+  SG:'#70907a',TA:'#6a5848',TB:'#8a6840',TL2:'#3e2e1a',TL:'#3e2e1a',
+  UM:'#7a6858',VM:'#4a3424',WB:'#8a6848',WE:'#c8b490',WH:'#6a4420',
+  WL:'#c0a878',WN:'#e0d8c8',WS:'#e0d4b8',WT:'#9a8870',WV:'#8a7260',
+  WW:'#e8e0d0',BO:'#a09060',PD:'#b8a0a0',BL:'#7090b8',AM:'#d4a870',
+  HZ:'#a09060',PV:'#907890',UB:'#7090a8',UO:'#b09070',FR2:'#5a3820',
+  WR:'#8C6239',DT:'#5A3D28',LG:'#D3D3D3'
+};
+const FN = {
+  AG:'Alpine Grey',AB:'Antique Brown',AC2:'Antique Charcoal',BN:'Black Natural',
+  BS:'Black Sand',BW:'Black Walnut',BP:'Beach Pebble',BU:'Buckskin',
+  CB:'Coffee Bean',CN:'Cinnamon',CO:'Charred Oak',DC2:'Dark Chocolate',
+  DR:'Desert Rock',DL:'Dry Leaf',EC:'European Cottage',ED:'European Dark',
+  GW:'Gray Wolf',KW:'Kingswood',LB:'Little Boy Blue',LW:'Light Wood',
+  MB:'Marble White & Buckskin',MG:'Modern Grey',MW:'Marble White',NW:'Nature Walk',
+  OB:'Ocean Blue',OG:'Oak Grove',RN:'Raisin',RO2:'Rustic Oak',
+  SG:'Sea Grass',TA:'Tobacco Leaf & Alpine Grey',TL2:'Tobacco Leaf',TL:'Tobacco Leaf',
+  VM:'Vintage Mocha',WB:'Weathered Brown',WH:'Whiskey',WN:'White Natural',
+  WS:'White Sand',WT:'Westwood Taupe',WV:'Westwood Village',WW:'Westwood White',
+  BO:'Bergen Oak',BL:'Black Magic',UM:'Umbra',TB:'Tobacco Brown',WE:'Wheat',
+  WL:'Walnut',HZ:'Hazelnut',PV:'Pavestone',CD:'Cinder',PD:'Desert Plain',
+  AM:'Amber',FR2:'French',UB:'Urban Bronze',UO:'Umbra & Oak Grove',
+  DT:'Dark Toast',LG:'Light Grey',WR:'Weathered Rum'
+};
+const CAT_LABELS = {
+  dining:'Dining','bar-game':'Bar & Game',entertainment:'Entertainment',
+  occasional:'Occasional',accents:'Accents','home-office':'Home Office',bedroom:'Bedroom'
+};
+const BASE_NAMES = {
+  '0113':'Breakfast Nook','0114':'Dining Set','0219':'Dining Table',
+  '1001':'Dining Set','1012':'Dining Set','1013':'Dining Set','1014':'Dining Set',
+  '1015':'Dining Set','1016':'Dining Set','1033':'Bar Set','1034':'Bar Table',
+  '1035':'Bar Table','1038':'Bar-Height Dining Set','1041':'Dining Set',
+  '1119':'Dining Set','1120':'Dining Table','1127':'Bar Table','1145':'Counter Set',
+  '1154':'Dining Set','1163':'Dining Set','1167':'Dining Set','1171':'Dining Set',
+  '1172':'Bar Table','1177':'Dining Set','1179':'Dining Collection',
+  '1180':'Dining Collection','1181':'Dining Set','1182':'Dining Table',
+  '1183':'Dining Table','1184':'Dining Set','1187':'Dining Collection',
+  '1191':'Dining Set','1192':'Dining Set','1201':'Dining Chair','1203':'Dining Set',
+  '1206':'Dining Set','1207':'Dining Set','1208':'Dining Set','1210':'Dining Set',
+  '1211':'Dining Chair','1212':'Dining Set','1213':'Dining Chair','1214':'Dining Table',
+  '1218':'Dining Table','1223':'Dining Set','1225':'Dining Set','1228':'Dining Set',
+  '1229':'Dining Set','1236':'Dining Set','1240':'Bar Table','1316':'Dining Set',
+  '1367':'Dining Set','1380':'Dining Set','1429':'Barstool','1430':'Counter Stool',
+  '1431':'Counter Stool','1433':'Counter Stool','1444':'Barstool','1447':'Dining Set',
+  '1527':'Barstool','1624':'Barstool','1632':'Counter Stool','1646':'Barstool',
+  '1653':'Counter Stool','1659':'Barstool','1671':'Barstool','1768':'Barstool',
+  '1908':'Bar Set','1959':'Game Table','1963':'Bar Set','1969':'Bar Set',
+  '1979':'Dining Set','2026':'Accent Cabinet','2043':'Accent Cabinet',
+  '2048':'Cocktail Table','2050':'Cocktail Table','2075':'Console Table',
+  '2077':'Cabinet','2080':'Cabinet','2088':'End Table','2089':'Side Table',
+  '2094':'Cocktail Table','2095':'Bar Cabinet','2096':'Bar Cabinet',
+  '2114':'Cocktail Table','2117':'Bar Set','2163':'Nesting Tables',
+  '2205':'Accent Set','2319':'Bedroom Suite','2321':'Bedroom Suite',
+  '2334':'Bedroom Suite','2336':'Bedroom Suite','2357':'Bedroom Suite',
+  '2371':'Bedroom Suite','2375':'Bedroom Suite','2377':'Bedroom Suite',
+  '2428':'Dining Bench','2813':'Desk','2817':'Desk','2822':'Home Office Suite',
+  '2833':'Desk','2835':'Desk','2836':'Desk','2839':'Desk',
+  '2844':'Home Office Suite','2845':'Desk','2846':'Home Office Suite',
+  '2847':'Bookcase','2858':'Desk / Bookcase','3124':'Coffee Table',
+  '3131':'Coffee Table','3137':'Coffee Table','3139':'Coffee Table',
+  '3143':'Coffee Table','3148':'Coffee Table','3156':'Cocktail Table',
+  '3159':'Coffee Table','3161':'End Table','3162':'Side Table','3166':'Coffee Table',
+  '3169':'Cocktail Table','3170':'Coffee Table','3172':'Coffee Table',
+  '3173':'Coffee Table','3175':'Coffee Table','3178':'Cocktail Table',
+  '3183':'Coffee Table','3185':'Coffee Table','3186':'Cocktail Table',
+  '3187':'End Table','3190':'Coffee Table','3191':'End Table','3192':'End Table',
+  '3194':'Coffee Table','3197':'Side Table','3198':'Coffee Table',
+  '3211':'Coffee Table','3266':'Cocktail Table','3270':'Coffee Table',
+  '3271':'Coffee Table','3273':'End Table','3292':'Coffee Table',
+  '3299':'Cocktail Table','3403':'TV Console','3563':'Entertainment Console',
+  '3565':'TV Console','3568':'Media Console','3573':'Media Console',
+  '3577':'Entertainment Wall','3599':'Entertainment Console','3628':'TV Console 70"',
+  '3629':'Entertainment Console','3643':'Desk','3644':'Entertainment Console',
+  '3646':'Entertainment Console 72"','3654':'Media Console','3655':'TV Stand',
+  '3659':'TV Console','3660':'Entertainment Wall','3665':'Entertainment Console',
+  '3667':'Entertainment Wall System','4020':'Bar Table','4022':'Bar Cabinet',
+  '4023':'Bar Cabinet','4027':'Bar Cabinet','0113-SB':'Server / Buffet',
+  '0114-SB':'Server / Buffet','0219-SB':'Server / Buffet','1451':'Accent Piece',
+  '1522':'Cabinet','1615':'Cabinet','1629':'Cabinet','1634':'Cabinet',
+  '1640':'Cabinet','1642':'Cabinet','1668':'Cabinet','1904':'Accent Piece',
+  '1920':'Console','1935':'Accent Cabinet','1982':'Accent Piece','1994':'Accent Piece'
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   📸  IMAGE GUIDE — 상품마다 이미지를 직접 지정하는 방법
+   ═══════════════════════════════════════════════════════════════════
+
+   PIECE_DB 의 각 상품 항목 안에  images: [ ... ]  배열을 추가합니다.
+   배열이 없으면 기존 자동 방식(Sunny Designs URL 자동 조합)으로 폴백됩니다.
+
+   ─── 이미지 1장의 형식 ───────────────────────────────────────────
+   { src: '이미지경로또는URL', label: '썸네일에 표시할 짧은 설명' }
+
+   ─── src 에 넣을 수 있는 4가지 값 ──────────────────────────────
+
+   ① 완전한 외부 URL (권장 — Sunny Designs, Dropbox, S3 등)
+      src: 'https://www.sunnydesigns.com/img/0113EC_DN_SL1.jpg'
+
+   ② /images/ 폴더 기준 상대 경로 (사이트에 직접 업로드한 경우)
+      src: 'images/my-photo.jpg'
+
+   ③ SD 상수 + Sunny Designs /images/ 파일명 (자동완성 헬퍼)
+      src: SD + '0113EC_MBTN1.jpg'
+      → https://www.sunnydesigns.com/images/0113EC_MBTN1.jpg 로 변환됨
+
+   ④ IM 상수 + Sunny Designs /img/ 슬라이드 파일명
+      src: IM + '0113EC_DN_SL1.jpg'
+      → https://www.sunnydesigns.com/img/0113EC_DN_SL1.jpg 로 변환됨
+
+   ─── 예시 ────────────────────────────────────────────────────────
+   images: [
+     { src: IM + '0113EC_DN_SL1.jpg',            label: 'Room view'   },
+     { src: SD + '0113EC_MBTN1.jpg',             label: 'Product'     },
+     { src: 'images/my-own-photo.jpg',           label: 'Detail'      },
+     { src: 'https://example.com/photo.jpg',     label: 'Lifestyle'   },
+   ]
+
+   ─── 주의사항 ────────────────────────────────────────────────────
+   • images 배열의 첫 번째 항목이 메인(히어로) 이미지로 사용됩니다
+   • images 배열이 없으면 variants 의 img 코드로 자동 생성됩니다
+   • 핀쉬(마감재)를 바꾸면 images 배열의 첫 번째 이미지가
+     해당 마감재의 이미지로 자동 교체됩니다 (나머지는 유지)
+   • pieces 의 img 필드도 같은 방식으로 지정할 수 있습니다
+
+   ─── pieces 이미지 지정 ──────────────────────────────────────────
+   pieces 배열의 각 항목에  img: '경로'  를 추가하면
+   피스 테이블 좌측 썸네일에 해당 이미지가 표시됩니다.
+   img 가 없으면 SKU 기반으로 자동 조합합니다.
+
+   예시:
+   { sku:'0113EC-T', label:'Table', dims:'60"×38"×30"H', wt:'92 lbs',
+     img: IM + '0113EC_DN_SL3.jpg' }
+
+═══════════════════════════════════════════════════════════════════ */
+
+/* ─── PIECE DATABASE ────────────────────────────── */
+const PIECE_DB = {
+
+  /* ──────────────────────────────────────────────
+     0113 | Carriage House Breakfast Nook
+     🖼  이미지: SL 슬라이드 6장 + 마감재별 1장
+  ────────────────────────────────────────────── */
+  '0113': {
+    collection: 'Carriage House',
+    desc: 'The Carriage House Breakfast Nook is crafted with mindi tops and mahogany bases that accentuate its charming simplicity. The versatile storage benches are reversible to fit any space, blending style and function into a timeless piece designed to become the heart of any home.',
+    features: [
+      'Mindi top & mahogany bases',
+      'Weathered crème fronts and frames',
+      'Hidden storage in long and short benches',
+      'Reversible seat fits any corner',
+      'Packed KD, simple assembly',
+    ],
+
+    /* 🖼  갤러리 이미지 — 원하는 순서로 자유롭게 추가/제거하세요
+       아래 6장은 Sunny Designs 슬라이드쇼 이미지입니다.
+       새 이미지를 추가하려면 { src: '경로', label: '설명' } 형식으로 줄을 추가하세요. */
+    images: [
+      { src: IM + '0113EC_DN_SL1.jpg', label: 'Room view'        },
+      { src: IM + '0113EC_DN_SL2.jpg', label: 'Dining area'      },
+      { src: IM + '0113EC_DN_SL3.jpg', label: 'Corner detail'    },
+      { src: IM + '0113EC_DN_SL4.jpg', label: 'Storage bench'    },
+      { src: IM + '0113EC_DN_SL5.jpg', label: 'Full set'         },
+      { src: IM + '0113EC_DN_SL6.jpg', label: 'Room setting'     },
+      // 아래에 이미지를 추가하세요 ↓
+      // { src: 'images/0113-lifestyle.jpg', label: 'Lifestyle' },
+    ],
+
+    pieces: [
+      /* img 필드를 추가하면 해당 피스의 썸네일 이미지를 직접 지정할 수 있습니다 */
+      { sku:'0113EC',    label:'Carriage House Breakfast Nook Set', dims:'75"×56"×36"H', wt:'272 lbs',
+        img: SD + '0113EC_MBTN1.jpg' },
+      { sku:'0113EC-T',  label:'Table',                            dims:'60"×38"×30"H', wt:'92 lbs',
+        img: IM + '0113EC_DN_SL3.jpg' },
+      { sku:'0113EC-BL', label:'Long Bench & Corner Back',         dims:'56"×20"×36"H', wt:'83 lbs'  },
+      { sku:'0113EC-BS', label:'Short Bench & Corner Seat',        dims:'37"×20"×36"H', wt:'57 lbs'  },
+      { sku:'0113EC-SB', label:'Side Bench, Wood Seat',            dims:'48"×15"×18"H', wt:'40 lbs'  },
+      { sku:'1616EC',    label:'Ladderback Chair, Wood Seat',      dims:'20"×18"×37"H', wt:'20 lbs'  },
+    ],
+  },
+
+  /* ──────────────────────────────────────────────
+     0114 | Carriage House Dining Set
+     🖼  이미지: images 배열에 원하는 이미지를 추가하세요
+  ────────────────────────────────────────────── */
+  '0114': {
+    collection: 'Carriage House',
+    desc: 'A refined dining set from the Carriage House collection, featuring hand-selected mindi solids and veneers with European Cottage finishing. Designed to complement the 0113 breakfast nook or stand alone as a full dining suite.',
+    features: [
+      'Mindi solids and veneers',
+      'European Cottage finish',
+      'Ladder-back chair design',
+      'Extendable dining table option',
+      'Packed KD, easy assembly',
+    ],
+
+    /* 🖼  갤러리 이미지 — 여기에 이미지를 추가하세요
+       현재 이미지 없음 → 자동으로 Sunny Designs 제품 이미지 사용
+       아래 주석을 해제하거나 새 항목을 추가해 원하는 이미지를 지정하세요 */
+    images: [
+      { src: SD + '0114EC_MBTN1.jpg', label: 'Dining Set' },
+      // { src: 'images/0114-detail.jpg',            label: 'Detail view'  },
+      // { src: 'https://your-url.com/image.jpg',    label: 'Lifestyle'    },
+    ],
+
+    pieces: [
+      { sku:'0114EC-T',  label:'Dining Table',  dims:'60"×38"×30"H', wt:'115 lbs' },
+      { sku:'0114EC-C',  label:'Side Chair',    dims:'18"×19"×37"H', wt:'18 lbs'  },
+      { sku:'0114EC-AC', label:'Arm Chair',     dims:'22"×21"×37"H', wt:'22 lbs'  },
+      { sku:'0114EC-SB', label:'Server/Buffet', dims:'55"×18"×36"H', wt:'98 lbs'  },
+    ],
+  },
+
+  /* ──────────────────────────────────────────────
+     2319 | Ranch House Bedroom Suite
+     🖼  이미지: images 배열에 원하는 이미지를 추가하세요
+  ────────────────────────────────────────────── */
+  '2319': {
+    collection: 'Ranch House',
+    desc: 'This beautiful Ranch House bedroom set has been crafted with rough sawn mahogany solids, veneers, and elegant hardware accents. The headboard was designed with drawers and shelves and each rail has two huge storage drawers for blankets and extra pillows.',
+    features: [
+      'Rough sawn mahogany solid and veneers',
+      'Youth bedroom design',
+      'Headboard with built-in shelves',
+      'Each rail with two large storage drawers',
+      'Little Boy Blue finish',
+    ],
+
+    /* 🖼  갤러리 이미지 */
+    images: [
+      { src: SD + '2319TL_MBTN1.jpg', label: 'Bedroom Suite' },
+      // { src: 'images/2319-room.jpg',  label: 'Room view'    },
+    ],
+
+    pieces: [
+      { sku:'2319LB-SF', label:'Full Captains Bookcase Storage Bed', dims:'57"×85"×48"H', wt:'269 lbs' },
+      { sku:'2319LB-ST', label:'Twin Captains Bookcase Storage Bed', dims:'42"×85"×48"H', wt:'229 lbs' },
+      { sku:'2319LB-N',  label:'Night Stand',    dims:'24"×16"×24"H', wt:'45 lbs'  },
+      { sku:'2319LB-D2', label:'Dresser',        dims:'58"×20"×33"H', wt:'200 lbs' },
+      { sku:'2319LB-M',  label:'Mirror',         dims:'32"×1"×38"H',  wt:'33 lbs'  },
+    ],
+  },
+
+  /* ──────────────────────────────────────────────
+     ✏️  새 상품을 추가하려면 아래 템플릿을 복사·붙여넣기 하세요
+     ────────────────────────────────────────────
+  'SKU번호': {
+    collection: '컬렉션명',
+    desc: '상품 설명 텍스트',
+    features: [
+      '특징 1',
+      '특징 2',
+      '특징 3',
+    ],
+    images: [
+      { src: SD + 'SKU번호XX_MBTN1.jpg', label: 'Main view'    },
+      { src: IM + 'SKU번호XX_SL1.jpg',   label: 'Room view 1'  },
+      { src: 'images/my-photo.jpg',      label: 'Detail'       },
+    ],
+    pieces: [
+      { sku:'SKU-A', label:'설명', dims:'W×D×H', wt:'XX lbs',
+        img: SD + 'SKU-A_MBTN1.jpg' },
+    ],
+  },
+  ────────────────────────────────────────────── */
+
+}; /* ← PIECE_DB 끝 */
+
+/* ─── RAW PRODUCT DATA ──────────────────────────── */
+const RAW = [
+  ['0113','0113AG_MBTN1A','dining','Breakfast Nook','AG'],['0113','0113AG_MBTN1','dining','Breakfast Nook','TA'],
+  ['0113','0113EC_MBTN1','dining','Breakfast Nook','EC'],['0113','0113BU_MBTN1','dining','Breakfast Nook','BU'],
+  ['0113','0113MB_MBTN1','dining','Breakfast Nook','MB'],['0113','0113MW_MBTN1','dining','Breakfast Nook','MW'],
+  ['0113','0113TL_MBTN1','dining','Breakfast Nook','TL2'],
+  ['0114','0114EC_MBTN1','dining','Dining Set','EC'],
+  ['0219','0219RO_MBTN1','dining','Dining Table','RO2'],
+  ['1001','1001BS_MBTN1','dining','Dining Set','BS'],['1001','1001OB_MBTN1','dining','Dining Set','OB'],
+  ['1012','1012TA_MBTN1','dining','Dining Set','TA'],['1012','1012TL2_MBTN1','dining','Dining Set','TL2'],
+  ['1013','1013TL2_MBTN1','dining','Dining Set','TL2'],
+  ['1014','1014EC_MBTN1','dining','Dining Set','EC'],
+  ['1015','1015EC_MBTN1','dining','Dining Set','EC'],['1015','1015MB_MBTN1','dining','Dining Set','MB'],
+  ['1016','1016EC_MBTN1','dining','Dining Set','EC'],
+  ['1038','1038AG_MBTN1','dining','Bar Dining Set','AG'],['1038','1038BU_MBTN1','dining','Bar Dining Set','BU'],['1038','1038TL_MBTN1','dining','Bar Dining Set','TL2'],
+  ['1041','1041EC_MBTN1','dining','Dining Set','EC'],
+  ['1119','1119EC_MBTN1','dining','Dining Set','EC'],
+  ['1120','1120BW_MBTN1','dining','Dining Table','BW'],
+  ['1145','1145TL-36_MBTN1','dining','Counter Set','TL2'],
+  ['1154','1154TL_MBTN1','dining','Dining Set','TL2'],['1163','1163TL_MBTN1','dining','Dining Set','TL2'],
+  ['1167','1167BU_MBTN1','dining','Dining Set','BU'],['1167','1167TL_MBTN1','dining','Dining Set','TL2'],
+  ['1171','1171BS_MBTN1','dining','Dining Set','BS'],['1171','1171OB_MBTN1','dining','Dining Set','OB'],
+  ['1177','1177RO2_MBTN1','dining','Dining Set','RO2'],
+  ['1179','1179CN_MMBTN1','dining','Dining Set','CN'],['1179','1179WL_MMBTN1','dining','Dining Set','WL'],
+  ['1180','1180TB_MBTN1','dining','Dining Collection','TB'],
+  ['1181','1181WE_MBTNA1','dining','Dining Set','WE'],
+  ['1182','1182LW_MMBTN1','dining','Dining Table','LW'],
+  ['1183','1183DR_MBTN1AA','dining','Dining Table','DR'],
+  ['1184','1184WE_MMBTN1','dining','Dining Set','WE'],
+  ['1187','1187CB_MMBTN1','dining','Dining Collection','CB'],
+  ['1191','1191UM_MMBTN1','dining','Dining Set','UM'],
+  ['1192','1192LW_MMBTN1','dining','Dining Set','LW'],
+  ['1201','1201WE_MMBTN1','dining','Dining Chair','WE'],
+  ['1203','1203TA_MBTN1','dining','Dining Set','TA'],
+  ['1206','1206PD_MBTN1','dining','Dining Set','PD'],['1207','1207PD_MBTN1','dining','Dining Set','PD'],
+  ['1208','1208TB_MBTN1','dining','Dining Set','TB'],['1210','1210WE_MBTN1','dining','Dining Set','WE'],
+  ['1211','1211UM_MBTN2','dining','Dining Chair','UM'],['1211','1211WE_MBTN2','dining','Dining Chair','WE'],
+  ['1212','1212CD_MBTN1','dining','Dining Set','CD'],['1212','1212UM_MBTN1','dining','Dining Set','UM'],['1212','1214WE_MBTN2','dining','Dining Set','WE'],
+  ['1213','1213CD_MBTN1','dining','Dining Chair','CD'],['1213','1213UM_MBTN1','dining','Dining Chair','UM'],['1213','1213WE_MBTN1','dining','Dining Chair','WE'],
+  ['1214','1214UM_MBTN1A','dining','Dining Table','UM'],['1214','1214CD_MBTN1A','dining','Dining Table','CD'],
+  ['1218','1218BO_MBTN1','dining','Dining Table','BO'],
+  ['1223','1223RO_MBTN1A','dining','Dining Set','RO2'],['1223','1223MB_MBTN1A','dining','Dining Set','MB'],['1223','1223TA_MBTN1','dining','Dining Set','TA'],
+  ['1225','1125DC2_MBTN1','dining','Dining Set','DC2'],
+  ['1228','1228AM_MBTN1','dining','Dining Set','AM'],['1229','1229AM_MBTN1AA','dining','Dining Set','AM'],
+  ['1236','1236WR_MBTN1','dining','Dining Set','WB'],
+  ['1316','1316BS_MBTN1','dining','Dining Set','BS'],['1316','1316WS_MBTN1','dining','Dining Set','WS'],['1316','1316VM_MBTN1','dining','Dining Set','VM'],
+  ['1367','1367BS_MBTN1','dining','Dining Set','BS'],['1367','1367WS_MBTN1','dining','Dining Set','WS'],
+  ['1380','1380AG_MBTN1','dining','Dining Set','AG'],['1380','1380BU_MBTN1','dining','Dining Set','BU'],['1380','1380VM_MBTN1','dining','Dining Set','VM'],
+  ['1447','1447WE_MBTN1','dining','Dining Set','WE'],['1979','1979EC_MBTN1','dining','Dining Set','EC'],
+  ['2428','2428DR-B_MBTN1','dining','Dining Bench','DR'],
+  ['1033','1033AG_MBTN1','bar-game','Bar Set','AG'],['1033','1033BU_MBTN1','bar-game','Bar Set','BU'],['1033','1033TL2_MBTN2','bar-game','Bar Set','TL2'],
+  ['1034','1034OG_MBTN2','bar-game','Bar Table','OG'],['1035','1035UM_MBTN2','bar-game','Bar Table','UM'],
+  ['1127','1127TL-36_MBTN1','bar-game','Bar Table','TL2'],
+  ['1172','1172BP_MBTN1','bar-game','Bar Table','BP'],['1172','1172OB_MBTN1','bar-game','Bar Table','OB'],['1172','1172SG_MBTN1','bar-game','Bar Table','SG'],['1172','1172WS_MBTN1','bar-game','Bar Table','WS'],
+  ['1240','1240CD_MBTN1','bar-game','Bar Table','CD'],
+  ['1908','1908WE_MBTN1','bar-game','Bar Set','WE'],
+  ['1959','1959EC_MBTN1','bar-game','Game Table','EC'],['1959','1959VM_MBTN1','bar-game','Game Table','VM'],
+  ['1963','1963AG_MBTN1','bar-game','Bar Set','AG'],['1963','1963BU-30_MBTN1','bar-game','Bar Set','BU'],['1963','1963TL_MBTN1','bar-game','Bar Set','TL2'],
+  ['1969','1969RO_MBTN1','bar-game','Bar Set','RO2'],
+  ['2095','2095WE-S_MBTN1','bar-game','Bar Cabinet','WE'],['2096','2096DR_MBTN1','bar-game','Bar Cabinet','DR'],
+  ['2117','2117BL_MBTN1A','bar-game','Bar Set','BL'],['2117','2117BO_MBTN1','bar-game','Bar Set','BO'],
+  ['4020','4020LW-60_MBTN1','bar-game','Bar Table','LW'],
+  ['4022','4022CB_MBTN1','bar-game','Bar Cabinet','CB'],['4023','4023BC_MBTN1','bar-game','Bar Cabinet','CB'],['4027','4027PV_MBTN1A','bar-game','Bar Cabinet','PV'],
+  ['1429','1429TL2-30_MBTN1','bar-game','Barstool','TL2'],['1429','1429BU-30_MBTN1','bar-game','Barstool','BU'],
+  ['1430','1430TL2-30_MBTN1','bar-game','Counter Stool','TL2'],
+  ['1431','1431FC-24W_MBTN1','bar-game','Counter Stool','WE'],
+  ['1433','1433EC-24_MBTN1','bar-game','Counter Stool','EC'],
+  ['1444','1444AG_MBTN1','bar-game','Barstool','AG'],['1444','1444ATL2_MBTN1','bar-game','Barstool','TL2'],
+  ['1527','1527CD-30 _MBTN1','bar-game','Barstool','CD'],['1527','1527UM-30 _MBTN1','bar-game','Barstool','UM'],
+  ['1624','1624AG-B30_MBTN1','bar-game','Backless Barstool','AG'],['1624','1624BU-B30_MBTN1','bar-game','Backless Barstool','BU'],['1624','1624EC-B30_MBTN1','bar-game','Backless Barstool','EC'],['1624','1624TL2-B24_MBTN1','bar-game','Backless Barstool','TL2'],
+  ['1632','1632BU-24_MBTN1','bar-game','Counter Stool','BU'],
+  ['1646','1646BW-B30_MBTNF1','bar-game','Backless Barstool','BW'],['1646','1646DC-30_MBTN1','bar-game','Barstool','DC2'],['1646','1646RO-30_MBTN1','bar-game','Barstool','RO2'],['1646','1646VM-30_MBTN1','bar-game','Barstool','VM'],
+  ['1653','1653BU-24_MBTN1','bar-game','Counter Stool','BU'],['1659','1659TL-30_MBTN1','bar-game','Barstool','TL2'],
+  ['1671','1671BP_MBTN1','bar-game','Barstool','BP'],['1671','1671BS_MBTN1','bar-game','Barstool','BS'],['1671','1671OB_MBTN1','bar-game','Barstool','OB'],['1671','1671SG_MBTN1','bar-game','Barstool','SG'],['1671','1671WS_MBTN1','bar-game','Barstool','WS'],
+  ['1768','1768BS_MBTN1','bar-game','Barstool','BS'],['1768','1768OB_MBTN1','bar-game','Barstool','OB'],['1768','1768TL-30_MBTN1','bar-game','Barstool','TL2'],
+  ['3403','3403DC2_MBTN1','entertainment','TV Console','DC2'],
+  ['3563','3563TL _MBTN1','entertainment','Entertainment Console','TL2'],['3563','3563WB _MBTN1','entertainment','Entertainment Console','WB'],
+  ['3565','3565DC2-65_MBTN1','entertainment','TV Console','DC2'],['3568','3568TL2_MBTN1','entertainment','Media Console','TL2'],
+  ['3573','3573TL_MBTNAA1','entertainment','Media Console','TL2'],
+  ['3577','3577EC2_MBTN1','entertainment','Entertainment Wall','EC'],['3577','3577MA_MBTN1','entertainment','Entertainment Wall','MB'],
+  ['3599','3599EC_MBTN1','entertainment','Entertainment Console','EC'],
+  ['3628','3628BU-70_MBTN1','entertainment','TV Console 70"','BU'],['3628','3628BD-70_MBTN1','entertainment','TV Console 70"','BS'],['3628','3628MW-70 _MBTN1','entertainment','TV Console 70"','MW'],['3628','3628TL-70 _MBTN1','entertainment','TV Console 70"','TL2'],
+  ['3629','3629EC_MBTN1','entertainment','Entertainment Console','EC'],['3644','3644DR_MBTN1','entertainment','Entertainment Console','DR'],
+  ['3646','3646AG-72_MBTN1','entertainment','Entertainment Console 72"','AG'],['3646','3646DR-72_MBTN1','entertainment','Entertainment Console 72"','DR'],['3646','3646TL-72_MBTN1','entertainment','Entertainment Console 72"','TL2'],
+  ['3654','3654AB_MBTN1','entertainment','Media Console','AB'],
+  ['3655','3655BP_MBTN1','entertainment','TV Stand','BP'],['3655','3655BS_MBTN1','entertainment','TV Stand','BS'],['3655','3655SG_MBTN1','entertainment','TV Stand','SG'],['3655','3655WS_MBTN1','entertainment','TV Stand','WS'],
+  ['3659','3659CB-52_MBTN1','entertainment','TV Console','CB'],['3659','3659CB-72_MBTN1','entertainment','TV Console','CB'],
+  ['3660','3660CB_MBTN1','entertainment','Entertainment Wall','CB'],
+  ['3665','3665BU-65_MBTN1','entertainment','Entertainment Console','BU'],['3665','3665BU-85_MBTN1','entertainment','Entertainment Console','BU'],
+  ['3667','3667UG-62_MBTN1','entertainment','Entertainment Wall System','UB'],['3667','3667MW-62_MBTN1','entertainment','Entertainment Wall System','MW'],['3667','3667CB-82_MBTN1','entertainment','Entertainment Wall System','CB'],
+  ['2048','2048EC-CT_MBTN1','occasional','Cocktail Table','EC'],['2050','2050TL-CT_MBTN1','occasional','Cocktail Table','TL2'],
+  ['2088','2088TL_MBTN1','occasional','End Table','TL2'],['2089','2089TL_MBTN1','occasional','Side Table','TL2'],
+  ['2094','2094CB_MBTN1','occasional','Cocktail Table','CB'],['2114','2114MB_MBTN1','occasional','Cocktail Table','MB'],
+  ['2163','2163_MBTN1','occasional','Nesting Tables','WE'],
+  ['3124','3124BW_MBTN1','occasional','Coffee Table','BW'],['3131','3131WB_MBTN1','occasional','Coffee Table','WB'],['3137','3137WV_MBTN1A','occasional','Coffee Table','WV'],
+  ['3139','3139TL_MBTN1','occasional','Coffee Table','TL2'],['3143','3143RO2_MBTN1','occasional','Coffee Table','RO2'],['3148','3148BU_MBTN1','occasional','Coffee Table','BU'],
+  ['3156','3156RN_MBTN1','occasional','Cocktail Table','RN'],['3156','3156DR_MBTN1','occasional','Cocktail Table','DR'],
+  ['3159','3159FR2_MBTN1','occasional','Coffee Table','FR2'],['3161','3161WB_MBTN1','occasional','End Table','WB'],['3162','3162WB_MBTN1','occasional','Side Table','WB'],
+  ['3166','3166DC2_MBTN1','occasional','Coffee Table','DC2'],['3169','3169AG_MBTN1','occasional','Cocktail Table','AG'],['3170','3170MB_MBTN1','occasional','Coffee Table','MB'],
+  ['3172','3172BS_MBTN1','occasional','Coffee Table','BS'],['3172','3172OB_MBTN1','occasional','Coffee Table','OB'],['3172','3172WS_MBTN1','occasional','Coffee Table','WS'],
+  ['3173','3172AB_MBTN1','occasional','Coffee Table','AB'],['3175','3175DC2_MBTN1','occasional','Coffee Table','DC2'],['3178','3178AB_MBTN1','occasional','Cocktail Table','AB'],
+  ['3183','3183TA_MBTN1','occasional','Coffee Table','TA'],['3185','3185MW_MBTN1','occasional','Coffee Table','MW'],
+  ['3186','3186CB_MBTN1','occasional','Cocktail Table','CB'],['3187','3187CB_MBTN1','occasional','End Table','CB'],['3187','3187CN_MBTN1','occasional','End Table','CN'],
+  ['3190','3190LW_MBTN1','occasional','Coffee Table','LW'],['3191','3191UB_MBTN1','occasional','End Table','UB'],['3192','3192CB_MBTN1','occasional','End Table','CB'],
+  ['3194','3194WE_MBTN1','occasional','Coffee Table','WE'],['3197','3197WE_MBTN1','occasional','Side Table','WE'],['3198','3198UO_MBTN1','occasional','Coffee Table','UO'],
+  ['3211','3211DC2_MBTN1','occasional','Coffee Table','DC2'],['3266','3266TL_MBTNA1','occasional','Cocktail Table','TL2'],
+  ['3270','3270FC2 _MBTN1','occasional','Coffee Table','FR2'],['3271','3271KB_MBTN1','occasional','Coffee Table','CB'],['3273','3273EC _MBTN1','occasional','End Table','EC'],
+  ['3292','3292TL_MBTN1','occasional','Coffee Table','TL2'],['3299','3299NW_MBTN1','occasional','Cocktail Table','NW'],
+  ['0113-SB','0113EC-SB_MBTN1','accents','Server/Buffet','EC'],['0113-SB','0113BU-SB_MBTN1','accents','Server/Buffet','BU'],['0113-SB','0113MB-SB_MBTN1','accents','Server/Buffet','MB'],['0113-SB','0113TA-SB_MBTN1','accents','Server/Buffet','TA'],['0113-SB','0113MW-SB_MBTN1','accents','Server/Buffet','MW'],['0113-SB','0113TL-SB_MBTN1','accents','Server/Buffet','TL2'],
+  ['0219-SB','0219RO2-SB_MBTN1','accents','Server/Buffet','RO2'],['0114-SB','0114EC-SB_MBTN1','accents','Server/Buffet','EC'],
+  ['1451','1451DT_MBTN1','accents','Accent Piece','DT'],
+  ['1522','1522VM_MBTN1','accents','Cabinet','VM'],['1522','1522BU_MBTN1','accents','Cabinet','BU'],
+  ['1615','1615BS_MBTNAA1','accents','Cabinet','BS'],['1615','1615WS_MBTNAA1','accents','Cabinet','WS'],['1615','1615VM _MBTN1','accents','Cabinet','VM'],
+  ['1629','1629EC_MBTN1','accents','Cabinet','EC'],['1634','1634BU _MBTN1','accents','Cabinet','BU'],
+  ['1640','1640TA_MBTN1','accents','Cabinet','TA'],['1640','1640TL2_MBTN1','accents','Cabinet','TL2'],
+  ['1642','1642EC_MBTN1','accents','Cabinet','EC'],['1668','1668TL_MBTNAA1','accents','Cabinet','TL2'],
+  ['1904','1904DT_MBTN1','accents','Accent Piece','DT'],['1920','1920WR_MBTN1','accents','Console','WB'],
+  ['1935','1935AC2_MBTN1','accents','Accent Cabinet','AC2'],['1935','1935DC2_MBTN1','accents','Accent Cabinet','DC2'],['1935','1935RO2-2_MBTN1','accents','Accent Cabinet','RO2'],['1935','1935BP_MBTN1','accents','Accent Cabinet','BP'],['1935','1935BS_MBTN1','accents','Accent Cabinet','BS'],['1935','1935OB_MBTN1','accents','Accent Cabinet','OB'],['1935','1935WS_MBTN1','accents','Accent Cabinet','WS'],
+  ['1982','1982TB_MBTN1','accents','Accent Piece','TB'],['1994','1994DB_MBTN1','accents','Accent Piece','DC2'],
+  ['2026','2026LB_MBTN1','accents','Accent Cabinet','LB'],['2043','2043BW_MBTN1','accents','Accent Cabinet','BW'],
+  ['2075','2075BU-48_MBTN1','accents','Console Table','BU'],['2075','2075MW_MBTN1','accents','Console Table','MW'],['2075','2075LB-48_MBTN1','accents','Console Table','LB'],
+  ['2077','2077BS_MBTN1','accents','Cabinet','BS'],['2077','2077OB_MBTN1','accents','Cabinet','OB'],['2077','2077SG_MBTN1','accents','Cabinet','SG'],['2077','2077WS_MBTN1','accents','Cabinet','WS'],
+  ['2080','2080BP_MBTN1','accents','Cabinet','BP'],['2080','2080BS_MBTN1','accents','Cabinet','BS'],
+  ['2205','2205HZ_MBTN1','accents','Accent Set','HZ'],['2205','2205PV_MBTN1','accents','Accent Set','PV'],['2205','2205UM_MBTN1','accents','Accent Set','UM'],
+  ['2813','2813DC2_MBTN1','home-office','Desk','DC2'],['2813','2813RO2_MBTN1','home-office','Desk','RO2'],
+  ['2817','2817CO2_MBTN1','home-office','Desk','CO'],
+  ['2822','2822EC_MBTN1','home-office','Office Suite','EC'],['2822','2822ED_MBTN1','home-office','Office Suite','ED'],
+  ['2833','2833RN_MBTN1','home-office','Desk','RN'],['2833','2833RN-P_MBTN1','home-office','Corner Desk','RN'],['2833','2833DR-P_MBTN1','home-office','Corner Desk','DR'],['2833','2833LW-P_MBTN1','home-office','Corner Desk','LW'],
+  ['2835','2835BU_MBTN1','home-office','Desk','BU'],['2836','2836MB_MBTN1','home-office','Desk','MB'],
+  ['2839','2836BW_MBTN1','home-office','Desk','BW'],['2839','2839DR_MBTN1','home-office','Desk','DR'],['2839','2839MW_MBTN1','home-office','Desk','MW'],
+  ['2844','2844EC_MBTN1','home-office','Office Suite','EC'],['2845','2845CN_MBTN1','home-office','Desk','CN'],
+  ['2846','2846MB_MBTN1','home-office','Office Suite','MB'],['2847','2847MB_MBTN1','home-office','Bookcase','MB'],
+  ['2858','2858TB-B_MBTN1','home-office','Bookcase','TB'],['2858','2858TB-D_MBTN1','home-office','Desk','TB'],
+  ['3643','3643BU-P3_MBTN1','home-office','Desk','BU'],
+  ['2319','2319TL_MBTN1','bedroom','Bedroom Suite','LB'],
+  ['2321','2321EC_MBTN1A','bedroom','Bedroom Suite','EC'],
+  ['2334','2334DC_MBTNA','bedroom','Bedroom Suite','DC2'],['2334','2334RO.-SEK_MBTN1A','bedroom','Bedroom Suite','RO2'],
+  ['2336','2336CN_MBTN1','bedroom','Bedroom Suite','CN'],['2336','2336MG_MBTN1','bedroom','Bedroom Suite','MG'],['2336','2336WL_MBTN1','bedroom','Bedroom Suite','WL'],
+  ['2357','2357DR_MBTN1','bedroom','Bedroom Suite','DR'],['2371','2371BU_MBTN1','bedroom','Bedroom Suite','BU'],
+  ['2375','2375OG_MBTN1','bedroom','Bedroom Suite','OG'],['2377','2377OG_MBTN1','bedroom','Bedroom Suite','OG']
+];
+
+/* ─── GROUP RAW ─────────────────────────────────── */
+function groupRaw(raw) {
+  const m = new Map();
+  raw.forEach(([base, img, cat, sub, fin]) => {
+    const k = base + '|' + cat;
+    if (!m.has(k)) m.set(k, { base, cat, sub, variants: [] });
+    m.get(k).variants.push({ img, fin });
+  });
+  return Array.from(m.values());
+}
+const ALL = groupRaw(RAW);
+function getName(p) { return BASE_NAMES[p.base] || p.sub || 'Furniture'; }
+
+/* ─── STATE ─────────────────────────────────────── */
+const QP   = new URLSearchParams(location.search);
+const pSku = QP.get('sku') || '0113';
+const pCat = QP.get('cat') || 'dining';
+const pFin = QP.get('finish') || '';
+const pImg = QP.get('img')    || '';
+
+const matches = ALL.filter(x => x.base === pSku);
+const product = (pCat ? matches.find(x => x.cat === pCat) : null) || matches[0];
+
+let activeV = null;
+if (product) {
+  activeV =
+    (pImg  ? product.variants.find(v => v.img === pImg)   : null) ||
+    (pFin  ? product.variants.find(v => v.fin === pFin)   : null) ||
+    product.variants[0];
+}
+
+let gImgs = [];
+let gIdx  = 0;
+
+/* ─── GALLERY IMAGES ────────────────────────────────────────────
+   우선순위:
+   1. PIECE_DB[sku].images 배열이 있으면 그대로 사용
+      → 첫 번째 이미지만 현재 마감재(activeV) 이미지로 교체
+   2. images 배열이 없으면 기존 자동 조합 방식 사용
+      (activeV 메인 + slImages + 다른 마감재 최대 3개)
+────────────────────────────────────────────────────────────── */
+function buildGImgs() {
+  if (!product || !activeV) return [];
+  const db = PIECE_DB[product.base];
+
+  /* ── 케이스 1: images 배열이 정의되어 있을 때 ── */
+  if (db && db.images && db.images.length) {
+    const finSrc = SD + activeV.img + '.jpg';   /* 현재 마감재 이미지 */
+    const finLbl = FN[activeV.fin] || activeV.fin;
+
+    /* 첫 번째 슬롯은 항상 현재 마감재 이미지로 교체,
+       나머지는 images 배열 순서 그대로 유지 */
+    return [
+      { src: finSrc, lbl: finLbl },          /* 0번: 현재 마감재 */
+      ...db.images                           /* 1번~: 직접 지정한 이미지들 */
+        .filter(img => img.src !== finSrc)   /* 중복 제거 */
+        .map(img => ({ src: img.src, lbl: img.label || '' })),
+    ];
+  }
+
+  /* ── 케이스 2: images 배열이 없을 때 자동 조합 ── */
+  const out = [];
+  out.push({ src: SD + activeV.img + '.jpg', lbl: FN[activeV.fin] || activeV.fin });
+  /* slImages 레거시 지원 */
+  if (db && db.slImages && db.slImages.length) {
+    db.slImages.forEach((sl, i) =>
+      out.push({ src: IM + sl + '.jpg', lbl: 'View ' + (i + 1) }));
+  }
+  product.variants
+    .filter(v => v.img !== activeV.img)
+    .slice(0, 3)
+    .forEach(v => out.push({ src: SD + v.img + '.jpg', lbl: FN[v.fin] || v.fin }));
+  return out;
+}
+
+/* ─── RENDER ────────────────────────────────────── */
+function render() {
+  if (!product || !activeV) { renderError(); return; }
+  gImgs = buildGImgs();
+  gIdx  = 0;
+
+  const db      = PIECE_DB[product.base] || {};
+  const name    = getName(product);
+  const catLbl  = CAT_LABELS[product.cat] || product.cat;
+  const finLbl  = FN[activeV.fin] || activeV.fin;
+  const desc    = db.desc || `${name} is a premium ${product.sub.toLowerCase()} crafted with refined proportions and elegant finishes. Available in ${product.variants.length} finish option${product.variants.length > 1 ? 's' : ''}.`;
+  const feats   = db.features || ['Quality hardwood construction','Multiple finish options','KD packed for easy assembly','Contact dealer for availability'];
+  const pieces  = db.pieces   || [];
+
+  document.title = name + ' — Java & Jawa';
+
+  /* sticky bar */
+  document.getElementById('sbThumb').src = SD + activeV.img + '.jpg';
+  document.getElementById('sbName').textContent  = name + ' — ' + product.sub;
+  document.getElementById('sbSub').textContent   = (db.collection || catLbl) + ' · ' + finLbl;
+  document.getElementById('sbCta').href = `contacts.html?sku=${encodeURIComponent(product.base)}&cat=${encodeURIComponent(product.cat)}`;
+  document.getElementById('sugAll').href = `products.html?cat=${product.cat}`;
+  document.getElementById('sugAll').innerHTML = `View all ${catLbl} <svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2"><path d="m5 12 14 0M12 5l7 7-7 7"/></svg>`;
+
+  /* finish swatches */
+  const MAX_SW = 9;
+  const swHtml = product.variants.slice(0, MAX_SW).map(v => `
+    <button class="fin-sw ${v.img === activeV.img ? 'active' : ''}"
+            style="background:${FC[v.fin]||'#aaa'}"
+            data-tip="${FN[v.fin]||v.fin}"
+            onclick="switchFin('${v.img}','${v.fin}')">
+    </button>`).join('') +
+    (product.variants.length > MAX_SW
+      ? `<span class="fin-extra">+${product.variants.length - MAX_SW} more</span>` : '');
+
+  /* pieces — img 필드가 있으면 직접 지정 이미지 사용, 없으면 SKU 기반 자동 */
+  const piecesHtml = pieces.length ? `
+    <div class="pd-hr"></div>
+    <p class="pd-sh">Available Pieces</p>
+    <div class="piece-list">
+      ${pieces.map(p => {
+        const imgSrc = p.img
+          ? p.img
+          : SD + p.sku + '_MMPBTN.jpg';
+        return `
+        <div class="piece-row">
+          <img class="piece-img" src="${imgSrc}" alt="${p.sku}"
+               onerror="this.style.background='#DEDAD2';this.removeAttribute('src')">
+          <div>
+            <div class="piece-sku">${p.sku}</div>
+            <div class="piece-lbl">${p.label}</div>
+            <div class="piece-dim">${p.dims}</div>
+          </div>
+          <div class="piece-wt">${p.wt}</div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  /* PDP html */
+  document.getElementById('pdp').innerHTML = `
+
+  <!-- GALLERY -->
+  <div class="pdp-gallery">
+    <div class="g-label">
+      <span class="g-label-text">${product.base}</span>
+      <span class="g-label-rule"></span>
+      <span class="g-label-text">${catLbl}</span>
+    </div>
+
+    <div class="g-stage" id="gStage">
+      <img class="g-main" id="gMain" src="${gImgs[0]?.src}" alt="${name}"
+           onerror="this.style.opacity='.3'">
+      <button class="g-arrow prev" onclick="shiftG(-1)" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button class="g-arrow next" onclick="shiftG(1)" aria-label="Next">
+        <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <span class="g-counter" id="gCounter">1 / ${gImgs.length}</span>
+    </div>
+
+    <div class="g-thumbs" id="gThumbs">
+      ${gImgs.map((g,i) => `
+        <div class="g-thumb ${i===0?'active':''}" onclick="goSlide(${i})">
+          <img src="${g.src}" alt="${g.lbl}" onerror="this.style.display='none'">
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="pdp-info">
+
+    <div class="pd-crumb">
+      <a href="index.html">Home</a>
+      <span class="pd-crumb-sep">/</span>
+      <a href="products.html">Products</a>
+      <span class="pd-crumb-sep">/</span>
+      <a href="products.html?cat=${product.cat}">${catLbl}</a>
+      <span class="pd-crumb-sep">/</span>
+      <span class="pd-crumb-cur">${product.base}</span>
+    </div>
+
+    <div class="pd-share">
+      <span class="share-lbl">Share</span>
+      <a class="share-a" href="https://www.facebook.com/share.php?u=${encodeURIComponent(location.href)}" target="_blank" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a class="share-a" href="https://pinterest.com/pin/create/button/?url=${encodeURIComponent(location.href)}" target="_blank" aria-label="Pinterest">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      </a>
+      <a class="share-a" href="https://api.whatsapp.com/send?text=${encodeURIComponent(name + ' ' + location.href)}" target="_blank" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </a>
+    </div>
+
+    <div class="pd-body">
+      <p class="pd-collection">${db.collection || catLbl} Collection · ${catLbl}</p>
+      <h1 class="pd-h1">${name}</h1>
+      <p class="pd-subtype">${product.sub} · SKU ${product.base}</p>
+
+      <p class="pd-desc collapsed" id="pdDesc">${desc}</p>
+      <button class="pd-see-more" id="pdToggle" onclick="toggleDesc()">See more</button>
+
+      <div class="pd-hr"></div>
+
+      <p class="pd-sh">Finish</p>
+      <div class="fin-row">
+        <div class="fin-dot" id="finDot" style="background:${FC[activeV.fin]||'#aaa'}"></div>
+        <span class="fin-label" id="finLabel">${finLbl}</span>
+      </div>
+      <div class="fin-swatches">${swHtml}</div>
+
+      ${piecesHtml}
+
+      <div class="pd-hr"></div>
+      <p class="pd-sh">Key Features</p>
+      <ul class="feat-list">
+        ${feats.map(f => `<li>${f}</li>`).join('')}
+      </ul>
+
+      <div class="pd-hr"></div>
+      <div class="cta-stack">
+        <a href="contacts.html?sku=${encodeURIComponent(product.base)}&cat=${encodeURIComponent(product.cat)}" class="btn-p">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Find a Dealer
+        </a>
+        <a href="contacts.html?sku=${encodeURIComponent(product.base)}&cat=${encodeURIComponent(product.cat)}&type=quote" class="btn-o">Request a Quote</a>
+      </div>
+
+      <div class="svc-trio">
+        <div class="svc">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="svc-title">Find a Showroom</div>
+          <p class="svc-txt">Visit an authorized dealer to see the full collection in person.</p>
+          <a href="contacts.html" class="svc-lnk">Locate dealer →</a>
+        </div>
+        <div class="svc">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="svc-title">Customization</div>
+          <p class="svc-txt">Most pieces available in additional finishes and custom configurations.</p>
+          <a href="contacts.html" class="svc-lnk">Enquire →</a>
+        </div>
+        <div class="svc">
+          <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="svc-title">Contact Us</div>
+          <p class="svc-txt">Our team is ready to answer any product questions you have.</p>
+          <a href="contacts.html" class="svc-lnk">Get in touch →</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  renderSuggestions();
+}
+
+function renderError() {
+  document.getElementById('pdp').innerHTML = `
+    <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;
+                height:70vh;flex-direction:column;gap:16px;text-align:center;padding:40px">
+      <p style="font-family:var(--f-d);font-size:2rem">Product not found</p>
+      <p style="color:var(--warm-mid);font-size:.88rem">No product matched SKU "${pSku}".</p>
+      <a href="products.html" class="btn-p" style="width:auto;padding:13px 32px">Back to Products</a>
+    </div>`;
+}
+
+/* ─── DESC TOGGLE ───────────────────────────────── */
+function toggleDesc() {
+  const el  = document.getElementById('pdDesc');
+  const btn = document.getElementById('pdToggle');
+  el.classList.toggle('collapsed');
+  btn.textContent = el.classList.contains('collapsed') ? 'See more' : 'See less';
+}
+
+/* ─── GALLERY ───────────────────────────────────── */
+function goSlide(idx) {
+  if (!gImgs.length) return;
+  idx  = ((idx % gImgs.length) + gImgs.length) % gImgs.length;
+  gIdx = idx;
+  const img = document.getElementById('gMain');
+  if (img) {
+    img.classList.add('fading');
+    const t = new Image();
+    t.onload  = () => { img.src = t.src; img.classList.remove('fading'); };
+    t.onerror = () => { img.classList.remove('fading'); };
+    t.src = gImgs[idx].src;
+  }
+  const ctr = document.getElementById('gCounter');
+  if (ctr) ctr.textContent = (idx + 1) + ' / ' + gImgs.length;
+  document.querySelectorAll('.g-thumb').forEach((el, i) =>
+    el.classList.toggle('active', i === idx));
+}
+function shiftG(d) { goSlide(gIdx + d); }
+
+/* ─── FINISH SWITCH ─────────────────────────────── */
+function switchFin(imgKey, finCode) {
+  activeV = product.variants.find(v => v.img === imgKey) || activeV;
+  const dot = document.getElementById('finDot');
+  const lbl = document.getElementById('finLabel');
+  if (dot) dot.style.background = FC[finCode] || '#aaa';
+  if (lbl) lbl.textContent = FN[finCode] || finCode;
+  document.querySelectorAll('.fin-sw').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('onclick')?.includes(`'${imgKey}'`));
+  });
+  gImgs = buildGImgs();
+  const thumbsEl = document.getElementById('gThumbs');
+  if (thumbsEl) {
+    thumbsEl.innerHTML = gImgs.map((g,i) => `
+      <div class="g-thumb ${i===0?'active':''}" onclick="goSlide(${i})">
+        <img src="${g.src}" alt="${g.lbl}" onerror="this.style.display='none'">
+      </div>`).join('');
+  }
+  goSlide(0);
+  document.getElementById('sbThumb').src = SD + imgKey + '.jpg';
+  document.getElementById('sbSub').textContent =
+    (PIECE_DB[product.base]?.collection || CAT_LABELS[product.cat] || product.cat) + ' · ' + (FN[finCode] || finCode);
+}
+
+/* ─── SUGGESTIONS ───────────────────────────────── */
+function renderSuggestions() {
+  if (!product) return;
+  const related = ALL.filter(x => x.cat === product.cat && x.base !== product.base).slice(0, 4);
+  if (!related.length) { document.getElementById('sugWrap').style.display = 'none'; return; }
+  document.getElementById('sugWrap').style.display = '';
+  document.getElementById('sugGrid').innerHTML = related.map(p => {
+    const pn = getName(p);
+    const v0 = p.variants[0];
+    const v1 = p.variants[1] || v0;
+    const dots = p.variants.slice(0,5).map((v,i) =>
+      `<div class="sug-dot ${i===0?'active':''}" style="background:${FC[v.fin]||'#aaa'}"></div>`
+    ).join('') + (p.variants.length>5 ? `<span class="sug-more">+${p.variants.length-5}</span>` : '');
+    return `
+      <a class="sug-card" href="product.html?sku=${encodeURIComponent(p.base)}&cat=${encodeURIComponent(p.cat)}">
+        <div class="sug-img-wrap">
+          <img class="sug-img primary" src="${SD}${v0.img}.jpg" alt="${pn}"
+               onerror="this.style.background='#ECEAE3';this.src='';this.onerror=null">
+          <img class="sug-img mood"    src="${SD}${v1.img}.jpg" alt="${pn}"
+               onerror="this.style.display='none'">
+        </div>
+        <div class="sug-body">
+          <div class="sug-cat">${CAT_LABELS[p.cat]||p.cat} · ${p.sub}</div>
+          <div class="sug-name">${pn}</div>
+          <div class="sug-sub">SKU ${p.base}</div>
+          <div class="sug-dots">${dots}</div>
+        </div>
+      </a>`;
+  }).join('');
+}
+
+/* ─── SCROLL BEHAVIORS ──────────────────────────── */
+const sBar = document.getElementById('stickyBar');
+window.addEventListener('scroll', () => {
+  sBar.classList.toggle('vis', scrollY > innerHeight * 0.42);
+  document.getElementById('navbar').classList.toggle('scrolled', scrollY > 50);
+}, { passive: true });
+
+/* keyboard gallery */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  shiftG(-1);
+  if (e.key === 'ArrowRight') shiftG(1);
+});
+
+/* ─── INIT ──────────────────────────────────────── */
+render();
+</script>
+</body>
+</html>

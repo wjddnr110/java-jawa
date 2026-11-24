@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Java & Jawa</title>
+    <meta name="description" content="Contact Java & Jawa — PT. Java Furniture (Mojokerto) and PT. Jawa Lily Furniture (Probolinggo). Email, WhatsApp, and Instagram.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+    /* ============================================================
+       CONTACTS PAGE
+    ============================================================ */
+
+    /* ---- Hero ---- */
+    .contact-hero {
+        padding-top: var(--nav-h);
+        background: var(--color-dark);
+        min-height: 340px;
+        display: flex;
+        align-items: flex-end;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-hero-bg {
+        position: absolute;
+        inset: 0;
+        background: url('contact-hero.jpg') center/cover no-repeat;
+        opacity: 0.28;
+    }
+
+    .contact-hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 60px 5% 56px;
+        max-width: var(--max-w);
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .contact-hero-content h1 { color: #fff; margin: 0.4rem 0 0.8rem; }
+    .contact-hero-content p  { color: rgba(255,255,255,0.6); max-width: 480px; font-size: 1.05rem; }
+
+    /* ---- Quick contact bar ---- */
+    .quick-contact-bar {
+        background: var(--color-accent);
+        padding: 0 5%;
+    }
+
+    .quick-contact-inner {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        display: flex;
+        gap: 0;
+        flex-wrap: wrap;
+    }
+
+    .quick-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 22px 40px 22px 0;
+        margin-right: 40px;
+        border-right: 1px solid rgba(255,255,255,0.2);
+        text-decoration: none;
+        transition: opacity var(--transition);
+    }
+
+    .quick-contact-item:last-child { border-right: none; margin-right: 0; }
+    .quick-contact-item:hover { opacity: 0.8; }
+
+    .quick-contact-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .quick-contact-icon svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1.8;
+    }
+
+    .quick-contact-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.7);
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .quick-contact-value {
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: #fff;
+        display: block;
+    }
+
+    /* ---- MAP ---- */
+    .map-section {
+        width: 100%;
+        height: 480px;
+        background: var(--color-warm);
+        position: relative;
+    }
+
+    .map-section iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+
+    /* ---- Two factory cards ---- */
+    .factory-cards {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 72px 5%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .factory-card {
+        border: 1px solid var(--color-border);
+        overflow: hidden;
+        background: var(--color-white);
+        transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .factory-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.07);
+    }
+
+    .factory-card-img {
+        height: 240px;
+        background: var(--color-warm);
+        overflow: hidden;
+    }
+
+    .factory-card-img img {
+        width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .factory-card:hover .factory-card-img img { transform: scale(1.04); }
+
+    .factory-card-body {
+        padding: 32px;
+    }
+
+    .factory-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--color-dark);
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+
+    .factory-card-body h3 {
+        font-size: 1.2rem;
+        margin-bottom: 6px;
+    }
+
+    .factory-card-body address {
+        font-style: normal;
+        font-size: 0.88rem;
+        color: var(--color-muted);
+        line-height: 1.8;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Detail rows inside factory card */
+    .factory-detail-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    .factory-detail-row:last-child { margin-bottom: 0; }
+
+    .factory-detail-icon {
+        width: 34px;
+        height: 34px;
+        background: var(--color-warm);
+        border: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .factory-detail-icon svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: var(--color-accent);
+        stroke-width: 1.8;
+    }
+
+    .factory-detail-text {
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    .factory-detail-text .detail-label {
+        display: block;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-muted);
+        margin-bottom: 2px;
+    }
+
+    .factory-detail-text a {
+        color: var(--color-accent);
+        font-weight: 500;
+        transition: opacity var(--transition);
+    }
+
+    .factory-detail-text a:hover { opacity: 0.75; }
+
+    .factory-hours {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--color-border);
+    }
+
+    .factory-hours-title {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-mid);
+        margin-bottom: 10px;
+    }
+
+    .hours-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        color: var(--color-mid);
+        padding: 4px 0;
+    }
+
+    .hours-row .day { color: var(--color-mid); }
+    .hours-row .time { font-weight: 500; color: var(--color-dark); }
+    .hours-row .closed { color: var(--color-muted); font-style: italic; }
+
+    .map-link-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding: 10px 0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-accent);
+        border-top: 1px solid var(--color-border);
+        transition: gap var(--transition);
+    }
+
+    .map-link-btn:hover { gap: 14px; }
+
+    .map-link-btn svg {
+        width: 14px; height: 14px;
+        fill: none; stroke: var(--color-accent); stroke-width: 2;
+    }
+
+    /* ---- US Office ---- */
+    .us-office-section {
+        background: var(--color-warm);
+        padding: 72px 5%;
+    }
+
+    .us-office-inner {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 56px;
+        align-items: center;
+    }
+
+    .us-office-img {
+        height: 360px;
+        background: var(--color-border);
+        overflow: hidden;
+    }
+
+    .us-office-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ---- Contact form section ---- */
+    .form-section {
+        padding: 80px 5%;
+        max-width: var(--max-w);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 72px;
+        align-items: start;
+    }
+
+    .form-intro h2 { margin-bottom: 1rem; }
+    .form-intro p   { margin-bottom: 1.4rem; }
+
+    .contact-channels { margin-top: 36px; }
+
+    .channel-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--color-border);
+        text-decoration: none;
+        color: var(--color-dark);
+        transition: color var(--transition);
+    }
+
+    .channel-item:first-child { border-top: 1px solid var(--color-border); }
+    .channel-item:hover { color: var(--color-accent); }
+
+    .channel-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--color-warm);
+        border: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background var(--transition), border-color var(--transition);
+    }
+
+    .channel-item:hover .channel-icon {
+        background: var(--color-accent);
+        border-color: var(--color-accent);
+    }
+
+    .channel-icon svg {
+        width: 18px; height: 18px;
+        fill: none; stroke: var(--color-mid); stroke-width: 1.8;
+        transition: stroke var(--transition);
+    }
+
+    .channel-item:hover .channel-icon svg { stroke: #fff; }
+
+    .channel-text { font-size: 0.95rem; }
+    .channel-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); display: block; margin-bottom: 2px; }
+
+    /* Form */
+    .contact-form-wrap {
+        background: var(--color-white);
+        border: 1px solid var(--color-border);
+        padding: 40px;
+    }
+
+    .contact-form-wrap h3 {
+        font-size: 1.1rem;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cf-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+
+    .cf-group label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-mid);
+    }
+
+    .cf-group input,
+    .cf-group select,
+    .cf-group textarea {
+        padding: 11px 14px;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg);
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--color-dark);
+        outline: none;
+        transition: border-color var(--transition), background var(--transition);
+    }
+
+    .cf-group input:focus,
+    .cf-group select:focus,
+    .cf-group textarea:focus {
+        border-color: var(--color-accent);
+        background: var(--color-white);
+    }
+
+    .cf-group textarea { resize: vertical; min-height: 120px; }
+
+    .cf-group select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a7770' stroke-width='1.5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+        background-color: var(--color-bg);
+    }
+
+    .cf-submit {
+        width: 100%;
+        padding: 14px;
+        background: var(--color-accent);
+        color: #fff;
+        font-family: var(--font-body);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: 2px solid var(--color-accent);
+        cursor: pointer;
+        transition: background var(--transition), color var(--transition);
+        margin-top: 8px;
+    }
+
+    .cf-submit:hover { background: transparent; color: var(--color-accent); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 1024px) {
+        .factory-cards  { grid-template-columns: 1fr; }
+        .us-office-inner { grid-template-columns: 1fr; }
+        .form-section   { grid-template-columns: 1fr; gap: 40px; }
+        .quick-contact-inner { flex-direction: column; gap: 0; }
+        .quick-contact-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 18px 0; margin-right: 0; }
+        .quick-contact-item:last-child { border-bottom: none; }
+    }
+
+    @media (max-width: 640px) {
+        .cf-row { grid-template-columns: 1fr; }
+        .contact-form-wrap { padding: 24px; }
+        .map-section { height: 320px; }
+    }
+    </style>
+</head>
+<body>
+
+    <!-- ======================================================
+         NAVBAR
+    ======================================================= -->
+    <header class="navbar" id="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">Java & Jawa</a>
+        </div>
+        <nav class="nav-center">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contacts.html">Contact</a></li>
+            </ul>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <!-- Mobile nav -->
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <!-- <ul class="sub-links">
+                <li><a href="dining.html">Dining</a></li>
+                <li><a href="bar-game.html">Bar & Game</a></li>
+                <li><a href="entertainment.html">Entertainment</a></li>
+                <li><a href="occasional.html">Occasional</a></li>
+                <li><a href="accents.html">Accents</a></li>
+                <li><a href="home-office.html">Home Office</a></li>
+                <li><a href="bedroom.html">Bedroom</a></li>
+            </ul> -->
+
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <div class="contact-hero">
+        <div class="contact-hero-bg"></div>
+        <div class="contact-hero-content">
+            <nav class="breadcrumb" aria-label="breadcrumb" style="justify-content:flex-start;margin-bottom:16px;">
+                <a href="index.html">Home</a><span>/</span><span>Contact</span>
+            </nav>
+            <span class="eyebrow" style="color:var(--color-accent-lt);">Get in Touch</span>
+            <h1>Contact Java & Jawa</h1>
+            <p>Two factories in East Java. One team ready to help — whether you're a retailer, designer, or buyer.</p>
+        </div>
+    </div>
+
+    <!-- QUICK CONTACT BAR -->
+    <div class="quick-contact-bar">
+        <div class="quick-contact-inner">
+
+            <a href="mailto:wjddnr1110@gmail.com" class="quick-contact-item">
+                <div class="quick-contact-icon">
+                    <!-- Email icon -->
+                    <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                </div>
+                <div>
+                    <span class="quick-contact-label">Email</span>
+                    <span class="quick-contact-value">wjddnr1110@gmail.com</span>
+                </div>
+            </a>
+
+            <a href="https://wa.me/6282229206931" target="_blank" rel="noopener" class="quick-contact-item">
+                <div class="quick-contact-icon">
+                    <!-- WhatsApp icon -->
+                    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                </div>
+                <div>
+                    <span class="quick-contact-label">WhatsApp</span>
+                    <span class="quick-contact-value">+62 822-2920-6931</span>
+                </div>
+            </a>
+
+            <a href="https://instagram.com/pt_jawalilyfurniture" target="_blank" rel="noopener" class="quick-contact-item">
+                <div class="quick-contact-icon">
+                    <!-- Instagram icon -->
+                    <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="#fff" stroke="none"/></svg>
+                </div>
+                <div>
+                    <span class="quick-contact-label">Instagram</span>
+                    <span class="quick-contact-value">@pt_jawalilyfurniture</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- ======================================================
+         GOOGLE MAP — both factory pins
+    ======================================================= -->
+    <div class="map-section">
+        <!--
+            Embed a Google Map with both factory locations.
+            To generate your embed URL:
+            1. Go to maps.google.com
+            2. Search each location and click "Share" → "Embed a map"
+            3. Copy the src URL and paste it below.
+
+            For a map showing BOTH pins, create a custom Google My Maps:
+            1. Go to mymaps.google.com → Create a new map
+            2. Add both factory pins
+            3. Share → Embed → copy the src
+
+            Placeholder iframe below — replace the src with your real embed URL.
+        -->
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126563.08!2d112.5!3d-7.69!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7dfe74789c4a5%3A0xecdfde7fbb37b197!2sJAVA%20FURNITURE!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Java & Jawa factory locations"
+            aria-label="Map showing both factory locations in East Java">
+        </iframe>
+    </div>
+
+    <!-- ======================================================
+         TWO FACTORY CARDS
+    ======================================================= -->
+    <div class="factory-cards">
+
+        <!-- Factory 01 — PT. Java Furniture -->
+        <div class="factory-card fade-up">
+            <div class="factory-card-img">
+                <img src="factory-java.jpg" alt="PT. Java Furniture — Mojokerto">
+            </div>
+            <div class="factory-card-body">
+                <span class="factory-tag">Factory 01</span>
+                <h3>PT. Java Furniture</h3>
+
+                <address>
+                    Glatik, Watesnegoro, Kec. Ngoro,<br>
+                    Kabupaten Mojokerto,<br>
+                    Jawa Timur 61385, Indonesia
+                </address>
+
+                <!-- Contact details -->
+                <div class="factory-detail-row">
+                    <div class="factory-detail-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                    </div>
+                    <div class="factory-detail-text">
+                        <span class="detail-label">Email</span>
+                        <a href="mailto:wjddnr1110@gmail.com">wjddnr1110@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="factory-detail-row">
+                    <div class="factory-detail-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <div class="factory-detail-text">
+                        <span class="detail-label">WhatsApp</span>
+                        <a href="https://wa.me/6282229206931" target="_blank" rel="noopener">+62 822-2920-6931</a>
+                    </div>
+                </div>
+
+                <div class="factory-detail-row">
+                    <div class="factory-detail-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="var(--color-accent)" stroke="none"/></svg>
+                    </div>
+                    <div class="factory-detail-text">
+                        <span class="detail-label">Instagram</span>
+                        <a href="https://instagram.com/pt_jawalilyfurniture" target="_blank" rel="noopener">@pt_jawalilyfurniture</a>
+                    </div>
+                </div>
+
+                <!-- Opening hours -->
+                <div class="factory-hours">
+                    <p class="factory-hours-title">Opening Hours</p>
+                    <div class="hours-row"><span class="day">Monday – Friday</span><span class="time">7:00 AM – 6:00 PM</span></div>
+                    <div class="hours-row"><span class="day">Saturday</span><span class="time">7:00 AM – 12:00 PM</span></div>
+                    <div class="hours-row"><span class="day">Sunday</span><span class="closed">Closed</span></div>
+                </div>
+
+                <!-- Google Maps link -->
+                <a href="https://maps.google.com/?q=JAVA+FURNITURE+Mojokerto" target="_blank" rel="noopener" class="map-link-btn">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Open in Google Maps
+                    <svg viewBox="0 0 24 24" style="margin-left:auto;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Factory 02 — PT. Jawa Lily Furniture -->
+        <div class="factory-card fade-up">
+            <div class="factory-card-img">
+                <img src="factory-jawa.jpg" alt="PT. Jawa Lily Furniture — Probolinggo">
+            </div>
+            <div class="factory-card-body">
+                <span class="factory-tag">Factory 02</span>
+                <h3>PT. Jawa Lily Furniture</h3>
+
+                <address>
+                    55C2+23F, Sak Sak, Sepuhgembol,<br>
+                    Kec. Wonomerto, Kabupaten Probolinggo,<br>
+                    Jawa Timur 67253, Indonesia
+                </address>
+
+                <div class="factory-detail-row">
+                    <div class="factory-detail-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                    </div>
+                    <div class="factory-detail-text">
+                        <span class="detail-label">Email</span>
+                        <a href="mailto:wjddnr1110@gmail.com">wjddnr1110@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="factory-detail-row">
+                    <div class="factory-detail-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <div class="factory-detail-text">
+                        <span class="detail-label">WhatsApp</span>
+                        <a href="https://wa.me/6282229206931" target="_blank" rel="noopener">+62 822-2920-6931</a>
+                    </div>
+                </div>
+
+                <div class="factory-detail-row">
+                    <div class="factory-detail-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="var(--color-accent)" stroke="none"/></svg>
+                    </div>
+                    <div class="factory-detail-text">
+                        <span class="detail-label">Instagram</span>
+                        <a href="https://instagram.com/pt_jawalilyfurniture" target="_blank" rel="noopener">@pt_jawalilyfurniture</a>
+                    </div>
+                </div>
+
+                <!-- Opening hours -->
+                <div class="factory-hours">
+                    <p class="factory-hours-title">Opening Hours</p>
+                    <div class="hours-row"><span class="day">Monday – Friday</span><span class="time">7:30 AM – 5:00 PM</span></div>
+                    <div class="hours-row"><span class="day">Saturday</span><span class="time">7:30 AM – 12:00 PM</span></div>
+                    <div class="hours-row"><span class="day">Sunday</span><span class="closed">Closed</span></div>
+                </div>
+
+                <a href="https://maps.google.com/?q=PT+Jawa+Lily+Furniture+Probolinggo" target="_blank" rel="noopener" class="map-link-btn">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Open in Google Maps
+                    <svg viewBox="0 0 24 24" style="margin-left:auto;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+
+    </div><!-- /factory-cards -->
+
+    <!-- ======================================================
+         US OFFICE
+    ======================================================= -->
+    <section class="us-office-section">
+        <div class="us-office-inner">
+            <div class="fade-up">
+                <span class="eyebrow">US Operations</span>
+                <h2 style="margin-bottom:1rem;">Los Angeles Office &amp; Warehouse</h2>
+                <p>Our US-based team handles all North American sales, sample requests, and logistics from our Los Angeles facility.</p>
+                <p style="margin-top:0.8rem;">Retailers, interior designers, and buyers are welcome to visit by appointment.</p>
+                <div class="divider"></div>
+                <address style="font-style:normal;font-size:0.9rem;color:var(--color-muted);line-height:2;">
+                    <strong style="color:var(--color-dark);">[Company Name]</strong><br>
+                    [Address Line 1]<br>
+                    Los Angeles, CA [Zip Code]<br>
+                    United States
+                </address>
+            </div>
+            <div class="us-office-img fade-up">
+                <img src="la-office.jpg" alt="Java & Jawa Los Angeles warehouse">
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         CONTACT FORM + CHANNEL LIST
+    ======================================================= -->
+    <section class="form-section">
+
+        <!-- Left: intro + channels -->
+        <div class="form-intro fade-up">
+            <span class="eyebrow">Send Us a Message</span>
+            <h2>We'd Love to Hear From You</h2>
+            <p>Whether you're inquiring about a specific product, requesting a catalog, or interested in becoming a dealer — fill in the form and we'll get back to you within one business day.</p>
+
+            <div class="contact-channels">
+
+                <a href="mailto:wjddnr1110@gmail.com" class="channel-item">
+                    <div class="channel-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                    </div>
+                    <div class="channel-text">
+                        <span class="channel-label">Email</span>
+                        wjddnr1110@gmail.com
+                    </div>
+                </a>
+
+                <a href="https://wa.me/6282229206931" target="_blank" rel="noopener" class="channel-item">
+                    <div class="channel-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <div class="channel-text">
+                        <span class="channel-label">WhatsApp</span>
+                        +62 822-2920-6931
+                    </div>
+                </a>
+
+                <a href="https://instagram.com/pt_jawalilyfurniture" target="_blank" rel="noopener" class="channel-item">
+                    <div class="channel-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                    </div>
+                    <div class="channel-text">
+                        <span class="channel-label">Instagram</span>
+                        @pt_jawalilyfurniture
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Right: contact form -->
+        <div class="contact-form-wrap fade-up">
+            <h3>Send an Enquiry</h3>
+            <form action="#" id="contactForm">
+                <div class="cf-row">
+                    <div class="cf-group">
+                        <label for="cf-first">First Name *</label>
+                        <input type="text" id="cf-first" name="first_name" required placeholder="John">
+                    </div>
+                    <div class="cf-group">
+                        <label for="cf-last">Last Name *</label>
+                        <input type="text" id="cf-last" name="last_name" required placeholder="Smith">
+                    </div>
+                </div>
+
+                <div class="cf-group">
+                    <label for="cf-email">Email Address *</label>
+                    <input type="email" id="cf-email" name="email" required placeholder="john@yourcompany.com">
+                </div>
+
+                <div class="cf-row">
+                    <div class="cf-group">
+                        <label for="cf-company">Company / Store Name</label>
+                        <input type="text" id="cf-company" name="company" placeholder="Smith Furniture Co.">
+                    </div>
+                    <div class="cf-group">
+                        <label for="cf-phone">WhatsApp / Phone</label>
+                        <input type="tel" id="cf-phone" name="phone" placeholder="+1 (xxx) xxx-xxxx">
+                    </div>
+                </div>
+
+                <div class="cf-group">
+                    <label for="cf-subject">I'm Interested In *</label>
+                    <select id="cf-subject" name="subject" required>
+                        <option value="" disabled selected>Select a topic…</option>
+                        <option>Product Enquiry</option>
+                        <option>Requesting a Catalog</option>
+                        <option>Finish Sample Request</option>
+                        <option>Becoming a Dealer</option>
+                        <option>Custom / OEM Order</option>
+                        <option>Shipping & Logistics</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="cf-group">
+                    <label for="cf-message">Message *</label>
+                    <textarea id="cf-message" name="message" required placeholder="Tell us about your enquiry — product SKUs, quantities, target delivery dates, etc."></textarea>
+                </div>
+
+                <button type="submit" class="cf-submit">Send Message</button>
+
+                <p style="font-size:0.75rem;color:var(--color-muted);margin-top:12px;text-align:center;">
+                    We respond within 1 business day. Your information is never shared.
+                </p>
+            </form>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>Manufacturing Locations</h4>
+                <address><strong style="color:rgba(255,255,255,0.65);font-style:normal;">PT. Java Furniture</strong><br>Glatik, Watesnegoro, Ngoro,<br>Mojokerto Regency, East Java 61385</address>
+                <br>
+                <address><strong style="color:rgba(255,255,255,0.65);font-style:normal;">PT. Jawa Lily Furniture</strong><br>55C2+23F, Sak Sak, Sepuhgembol,<br>Kec. Wonomerto, Probolinggo, East Java 67253</address>
+                <a href="#" class="map-link">View on Google Maps</a>
+            </div>
+            <div class="footer-col">
+                <h4>US Operations</h4>
+                <address><strong style="color:rgba(255,255,255,0.65);font-style:normal;">LA Office & Warehouse</strong><br>[Address Line 1]<br>Los Angeles, CA [Zip Code]</address>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <a href="mailto:wjddnr1110@gmail.com">wjddnr1110@gmail.com</a>
+                <a href="https://wa.me/6282229206931" target="_blank">WhatsApp: +62 822-2920-6931</a>
+                <a href="https://instagram.com/pt_jawalilyfurniture" target="_blank">@pt_jawalilyfurniture</a>
+            </div>
+            <div class="footer-col">
+                <h4>Stay Updated</h4>
+                <p>Subscribe for new catalogs and show announcements.</p>
+                <form action="#" class="newsletter-form" style="margin-top:16px;">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom" style="max-width:var(--max-w);margin:0 auto;">
+            <p>&copy; 2026 Java & Jawa. All rights reserved.</p>
+            <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+        </div>
+    </footer>
+
+    <script>
+    const navbar    = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+    hamburger.addEventListener('click', () => {
+        const open = mobileNav.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', open);
+        mobileNav.setAttribute('aria-hidden', !open);
+        document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    /* Fade-up */
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    /* Form submit — placeholder handler */
+    document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('.cf-submit');
+        btn.textContent = 'Message Sent ✓';
+        btn.style.background = '#2a7a50';
+        btn.style.borderColor = '#2a7a50';
+        btn.disabled = true;
+        /* TODO: wire up to your backend / Formspree / EmailJS here */
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events | Java & Jawa</title>
+    <meta name="description" content="Find Java & Jawa at major US furniture trade shows — Las Vegas Market, High Point Market, and more.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+    /* ============================================================
+       EVENTS PAGE
+    ============================================================ */
+
+    .events-hero {
+        padding-top: var(--nav-h);
+        background: var(--color-dark);
+        min-height: 380px;
+        display: flex;
+        align-items: flex-end;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .events-hero-bg {
+        position: absolute;
+        inset: 0;
+        background: url('events-hero.jpg') center/cover no-repeat;
+        opacity: 0.3;
+    }
+
+    .events-hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 60px 5% 56px;
+        max-width: var(--max-w);
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .events-hero-content h1 { color: #fff; margin: 0.4rem 0 0.8rem; }
+    .events-hero-content p  { color: rgba(255,255,255,0.6); max-width: 480px; font-size: 1.05rem; }
+
+    /* ---- Tab bar (Upcoming / Past) ---- */
+    .events-tab-bar {
+        background: var(--color-white);
+        border-bottom: 1px solid var(--color-border);
+        padding: 0 5%;
+        display: flex;
+        gap: 0;
+    }
+
+    .events-tab {
+        padding: 18px 28px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-muted);
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        background: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        font-family: var(--font-body);
+        transition: color var(--transition), border-color var(--transition);
+    }
+
+    .events-tab:hover  { color: var(--color-dark); }
+    .events-tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+
+    /* ---- Main content layout ---- */
+    .events-body {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 72px 5% 100px;
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 64px;
+        align-items: start;
+    }
+
+    /* ---- Year group ---- */
+    .event-year-group { margin-bottom: 60px; }
+
+    .event-year-label {
+        font-family: var(--font-display);
+        font-size: 0.78rem;
+        font-weight: 400;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-muted);
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    /* ---- Event row ---- */
+    .event-item {
+        display: grid;
+        grid-template-columns: 100px 1fr auto;
+        gap: 32px;
+        align-items: center;
+        padding: 32px 0;
+        border-bottom: 1px solid var(--color-border);
+        transition: background var(--transition);
+    }
+
+    .event-item:first-of-type { border-top: 1px solid var(--color-border); }
+
+    .event-item:hover { background: var(--color-warm); margin: 0 -20px; padding: 32px 20px; }
+
+    /* Date block */
+    .event-date-block { text-align: center; flex-shrink: 0; }
+
+    .event-day {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 2.6rem;
+        line-height: 1;
+        color: var(--color-accent);
+    }
+
+    .event-month-year {
+        display: block;
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-muted);
+        margin-top: 4px;
+    }
+
+    /* Info block */
+    .event-info h3 {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+
+    .event-info p {
+        font-size: 0.88rem;
+        color: var(--color-muted);
+        margin-bottom: 8px;
+    }
+
+    .event-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .event-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 1px solid var(--color-border);
+        color: var(--color-mid);
+    }
+
+    .event-badge.upcoming {
+        background: var(--color-accent);
+        border-color: var(--color-accent);
+        color: #fff;
+    }
+
+    .event-badge.past { opacity: 0.6; }
+
+    /* Action */
+    .event-action { flex-shrink: 0; }
+
+    /* Past events — muted */
+    .event-item.past .event-day { color: var(--color-muted); }
+
+    /* ---- Sidebar ---- */
+    .events-sidebar { position: sticky; top: calc(var(--nav-h) + 24px); }
+
+    .sidebar-card {
+        border: 1px solid var(--color-border);
+        padding: 28px;
+        margin-bottom: 24px;
+        background: var(--color-white);
+    }
+
+    .sidebar-card h4 {
+        font-family: var(--font-body);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-dark);
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .sidebar-card p { font-size: 0.88rem; margin-bottom: 12px; }
+
+    .sidebar-card .btn {
+        width: 100%;
+        text-align: center;
+        font-size: 0.72rem;
+        padding: 12px;
+        display: block;
+    }
+
+    /* ---- Empty state (past tab) ---- */
+    .events-list-panel { display: none; }
+    .events-list-panel.active { display: block; }
+
+    /* ---- Newsletter CTA ---- */
+    .events-cta {
+        background: var(--color-dark);
+        padding: 80px 5%;
+        text-align: center;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 1024px) {
+        .events-body { grid-template-columns: 1fr; }
+        .events-sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    }
+
+    @media (max-width: 640px) {
+        .event-item { grid-template-columns: 80px 1fr; gap: 20px; }
+        .event-action { display: none; }
+        .events-sidebar { grid-template-columns: 1fr; }
+        .event-item:hover { margin: 0; padding: 32px 0; }
+    }
+    </style>
+</head>
+<body>
+
+    <!-- ======================================================
+         NAVBAR
+    ======================================================= -->
+    <header class="navbar" id="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo">Java & Jawa</a>
+        </div>
+        <nav class="nav-center">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contacts.html">Contact</a></li>
+            </ul>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <!-- Mobile nav -->
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <!-- <ul class="sub-links">
+                <li><a href="dining.html">Dining</a></li>
+                <li><a href="bar-game.html">Bar & Game</a></li>
+                <li><a href="entertainment.html">Entertainment</a></li>
+                <li><a href="occasional.html">Occasional</a></li>
+                <li><a href="accents.html">Accents</a></li>
+                <li><a href="home-office.html">Home Office</a></li>
+                <li><a href="bedroom.html">Bedroom</a></li>
+            </ul> -->
+
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <div class="events-hero">
+        <div class="events-hero-bg"></div>
+        <div class="events-hero-content">
+            <nav class="breadcrumb" aria-label="breadcrumb" style="justify-content:flex-start;margin-bottom:16px;">
+                <a href="index.html">Home</a><span>/</span><span>Events</span>
+            </nav>
+            <span class="eyebrow" style="color:var(--color-accent-lt);">Trade Shows & Market Events</span>
+            <h1>Find Us at Market</h1>
+            <p>Java & Jawa exhibits at major US furniture trade shows throughout the year. Come see our collections in person.</p>
+        </div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="events-tab-bar">
+        <button class="events-tab active" data-panel="upcoming">Upcoming Events</button>
+        <button class="events-tab"        data-panel="past">Past Events</button>
+    </div>
+
+    <!-- MAIN BODY -->
+    <div class="events-body">
+
+        <!-- LEFT: Event lists -->
+        <div>
+
+            <!-- UPCOMING -->
+            <div class="events-list-panel active" id="panel-upcoming">
+                <div class="event-year-group">
+                    <p class="event-year-label">2026</p>
+
+                    <div class="event-item fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">19</span>
+                            <span class="event-month-year">Apr 2026</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>High Point Market — Spring</h3>
+                            <p>High Point, North Carolina · Showroom [XX], Building [XX]</p>
+                            <div class="event-meta">
+                                <span class="event-badge upcoming">Upcoming</span>
+                                <span class="event-badge">Apr 19 – 23, 2026</span>
+                                <span class="event-badge">Trade Show</span>
+                            </div>
+                        </div>
+                        <div class="event-action">
+                            <a href="contacts.html" class="btn btn-outline" style="font-size:0.72rem;padding:10px 20px;">Book a Meeting</a>
+                        </div>
+                    </div>
+
+                    <div class="event-item fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">27</span>
+                            <span class="event-month-year">Jul 2026</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Las Vegas Market — Summer</h3>
+                            <p>World Market Center, Las Vegas, NV · Building C, Space [XX]</p>
+                            <div class="event-meta">
+                                <span class="event-badge upcoming">Upcoming</span>
+                                <span class="event-badge">Jul 27 – 31, 2026</span>
+                                <span class="event-badge">Trade Show</span>
+                            </div>
+                        </div>
+                        <div class="event-action">
+                            <a href="contacts.html" class="btn btn-outline" style="font-size:0.72rem;padding:10px 20px;">Book a Meeting</a>
+                        </div>
+                    </div>
+
+                    <div class="event-item fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">17</span>
+                            <span class="event-month-year">Oct 2026</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>High Point Market — Fall</h3>
+                            <p>High Point, North Carolina · Showroom [XX], Building [XX]</p>
+                            <div class="event-meta">
+                                <span class="event-badge upcoming">Upcoming</span>
+                                <span class="event-badge">Oct 17 – 21, 2026</span>
+                                <span class="event-badge">Trade Show</span>
+                            </div>
+                        </div>
+                        <div class="event-action">
+                            <a href="contacts.html" class="btn btn-outline" style="font-size:0.72rem;padding:10px 20px;">Book a Meeting</a>
+                        </div>
+                    </div>
+
+                </div><!-- /2026 -->
+            </div><!-- /upcoming -->
+
+            <!-- PAST -->
+            <div class="events-list-panel" id="panel-past">
+                <div class="event-year-group">
+                    <p class="event-year-label">2026</p>
+
+                    <div class="event-item past fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">14</span>
+                            <span class="event-month-year">Jan 2026</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Las Vegas Market — Winter</h3>
+                            <p>World Market Center, Las Vegas, NV · Building C, Space [XX]</p>
+                            <div class="event-meta">
+                                <span class="event-badge past">Completed</span>
+                                <span class="event-badge">Jan 14 – 18, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-year-group">
+                    <p class="event-year-label">2025</p>
+
+                    <div class="event-item past fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">18</span>
+                            <span class="event-month-year">Oct 2025</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>High Point Market — Fall</h3>
+                            <p>High Point, North Carolina</p>
+                            <div class="event-meta">
+                                <span class="event-badge past">Completed</span>
+                                <span class="event-badge">Oct 18 – 22, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-item past fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">27</span>
+                            <span class="event-month-year">Jul 2025</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Las Vegas Market — Summer</h3>
+                            <p>World Market Center, Las Vegas, NV</p>
+                            <div class="event-meta">
+                                <span class="event-badge past">Completed</span>
+                                <span class="event-badge">Jul 27 – 31, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-item past fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">26</span>
+                            <span class="event-month-year">Apr 2025</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>High Point Market — Spring</h3>
+                            <p>High Point, North Carolina</p>
+                            <div class="event-meta">
+                                <span class="event-badge past">Completed</span>
+                                <span class="event-badge">Apr 26 – 30, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-item past fade-up">
+                        <div class="event-date-block">
+                            <span class="event-day">12</span>
+                            <span class="event-month-year">Jan 2025</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Las Vegas Market — Winter</h3>
+                            <p>World Market Center, Las Vegas, NV</p>
+                            <div class="event-meta">
+                                <span class="event-badge past">Completed</span>
+                                <span class="event-badge">Jan 12 – 16, 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /past -->
+
+        </div><!-- /left -->
+
+        <!-- RIGHT: Sidebar -->
+        <aside class="events-sidebar">
+
+            <div class="sidebar-card fade-up">
+                <h4>Book a Meeting</h4>
+                <p>Planning to attend one of our upcoming shows? Reach out in advance and we'll schedule dedicated time with our sales team.</p>
+                <a href="contacts.html" class="btn">Contact Us</a>
+            </div>
+
+            <div class="sidebar-card fade-up">
+                <h4>Request a Catalog</h4>
+                <p>Can't make it to a show? Our full product catalog and finish samples are available on request.</p>
+                <a href="contacts.html" class="btn btn-outline">Request Catalog</a>
+            </div>
+
+            <div class="sidebar-card fade-up">
+                <h4>Stay Notified</h4>
+                <p>Subscribe to receive show dates and booth information as soon as they're confirmed.</p>
+                <form action="#" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+                    <input type="email" placeholder="Your email" required
+                        style="padding:10px 12px;border:1px solid var(--color-border);font-family:var(--font-body);font-size:0.85rem;outline:none;">
+                    <button type="submit" class="btn" style="font-size:0.72rem;padding:11px;">Subscribe</button>
+                </form>
+            </div>
+
+        </aside>
+
+    </div><!-- /events-body -->
+
+    <!-- CTA -->
+    <div class="events-cta">
+        <span class="eyebrow" style="color:var(--color-accent-lt);">Can't Make It to a Show?</span>
+        <h2 style="color:#fff;max-width:480px;margin:12px auto 1rem;">Get in touch directly with our US sales team</h2>
+        <p style="color:rgba(255,255,255,0.6);max-width:380px;margin:0 auto 2rem;">We're available year-round at our Los Angeles office and warehouse for appointments, catalog requests, and sample orders.</p>
+        <a href="contacts.html" class="btn">Contact Us</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>Manufacturing Locations</h4>
+                <address><strong style="color:rgba(255,255,255,0.65);font-style:normal;">PT. Java Furniture</strong><br>Mojokerto Regency, East Java 61385</address>
+                <br>
+                <address><strong style="color:rgba(255,255,255,0.65);font-style:normal;">PT. Jawa Lily Furniture</strong><br>Kec. Wonomerto, Probolinggo, East Java 67253</address>
+                <a href="#" class="map-link">View on Google Maps</a>
+            </div>
+            <div class="footer-col">
+                <h4>US Operations</h4>
+                <address><strong style="color:rgba(255,255,255,0.65);font-style:normal;">LA Office & Warehouse</strong><br>[Address], Los Angeles, CA</address>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <a href="#">WhatsApp</a>
+                <a href="mailto:wjddnr1110@gmail.com">Email Us</a>
+                <a href="https://instagram.com/pt_jawalilyfurniture" target="_blank">Instagram</a>
+                <a href="#">Facebook</a>
+            </div>
+            <div class="footer-col">
+                <h4>Stay Updated</h4>
+                <p>Subscribe for new catalogs and show announcements.</p>
+                <form action="#" class="newsletter-form" style="margin-top:16px;">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom" style="max-width:var(--max-w);margin:0 auto;">
+            <p>&copy; 2026 Java & Jawa. All rights reserved.</p>
+            <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+        </div>
+    </footer>
+
+    <script>
+    const navbar    = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+    hamburger.addEventListener('click', () => {
+        const open = mobileNav.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', open);
+        mobileNav.setAttribute('aria-hidden', !open);
+        document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    /* Tab switching */
+    document.querySelectorAll('.events-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.events-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.events-list-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+        });
+    });
+
+    /* Fade-up */
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+    </script>
+</body>
+</html>
